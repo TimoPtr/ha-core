@@ -7,6 +7,9 @@
   "containerEnv": {
     "PYTHONASYNCIODEBUG": "1"
   },
+  "mounts": [
+  "source=/Users/timo/Documents/ha/frontend,target=/workspaces/frontend,type=bind,consistency=cached"
+  ],
   "features": {
     // Node feature required for Claude Code until fixed https://github.com/anthropics/devcontainer-features/issues/28
     "ghcr.io/devcontainers/features/node:1": {},

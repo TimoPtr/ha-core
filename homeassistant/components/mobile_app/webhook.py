@@ -98,6 +98,7 @@ from .const import (
     DATA_CONFIG_ENTRIES,
     DATA_DELETED_IDS,
     DATA_DEVICES,
+    DATA_PENDING_UPDATES,
     DOMAIN,
     ERR_ENCRYPTION_ALREADY_ENABLED,
     ERR_ENCRYPTION_REQUIRED,
@@ -568,7 +569,7 @@ async def webhook_register_sensor(
     # If sensor already is registered, update current state instead
     if existing_sensor:
         _LOGGER.debug(
-            "Re-register for %s of existing sensor %s", device_name, unique_id
+            "Re-register for %s of existing sensor %s with %s", device_name, unique_id, data
         )
 
         entry = entity_registry.async_get(existing_sensor)
@@ -601,7 +602,16 @@ async def webhook_register_sensor(
         if changes:
             entity_registry.async_update_entity(existing_sensor, **changes)
 
-        async_dispatcher_send(hass, f"{SIGNAL_SENSOR_UPDATE}-{unique_store_key}", data)
+        # Only send update signal if entity is not disabled
+        # Otherwise, store it as pending update
+        if not entry.disabled_by:
+            _LOGGER.debug("Dispatch signal %s", f"{SIGNAL_SENSOR_UPDATE}-{unique_store_key}")
+            async_dispatcher_send(hass, f"{SIGNAL_SENSOR_UPDATE}-{unique_store_key}", data)
+        else:
+            _LOGGER.debug(
+                "Entity %s is disabled, storing pending update", unique_store_key
+            )
+            hass.data[DOMAIN][DATA_PENDING_UPDATES][unique_store_key] = data
     else:
         data[CONF_UNIQUE_ID] = unique_store_key
         data[CONF_NAME] = (

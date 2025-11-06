@@ -5,6 +5,9 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import TYPE_CHECKING, Any
 
+import logging
+
+
 from homeassistant.components.sensor import RestoreSensor, SensorDeviceClass
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_WEBHOOK_ID, STATE_UNKNOWN, UnitOfTemperature
@@ -32,6 +35,17 @@ from .const import (
 from .entity import MobileAppEntity
 from .webhook import _extract_sensor_unique_id
 
+from homeassistant.helpers.update_coordinator import (
+    CoordinatorEntity,
+    DataUpdateCoordinator,
+    UpdateFailed,
+)
+
+
+
+
+
+_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -69,13 +83,15 @@ async def async_setup_entry(
     def handle_sensor_registration(data):
         if data[CONF_WEBHOOK_ID] != webhook_id:
             return
-
+        _LOGGER.debug("Registering new sensor with data: %s", data)
         async_add_entities([MobileAppSensor(data, config_entry)])
 
-    async_dispatcher_connect(
-        hass,
-        f"{DOMAIN}_{ENTITY_TYPE}_register",
-        handle_sensor_registration,
+    config_entry.async_on_unload(
+        async_dispatcher_connect(
+            hass,
+            f"{DOMAIN}_{ENTITY_TYPE}_register",
+            handle_sensor_registration,
+        )
     )
 
 
@@ -86,6 +102,12 @@ class MobileAppSensor(MobileAppEntity, RestoreSensor):
         """Restore previous state."""
         await super().async_restore_last_state(last_state)
         config = self._config
+
+
+        _LOGGER.debug("Restoring last state: %s", last_state)
+        _LOGGER.debug("Current config: %s", config)
+
+
         if not (last_sensor_data := await self.async_get_last_sensor_data()):
             # Workaround to handle migration to RestoreSensor, can be removed
             # in HA Core 2023.4

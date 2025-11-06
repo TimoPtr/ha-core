@@ -4,11 +4,15 @@ from __future__ import annotations
 
 from typing import Any
 
+import logging
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_ICON, CONF_NAME, CONF_UNIQUE_ID, STATE_UNAVAILABLE, STATE_UNKNOWN
 from homeassistant.core import State, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.restore_state import RestoreEntity
+
+from homeassistant.helpers.update_coordinator import CoordinatorEntity, DataUpdateCoordinator
 
 from .const import (
     ATTR_SENSOR_ATTRIBUTES,
@@ -18,18 +22,23 @@ from .const import (
     ATTR_SENSOR_ICON,
     ATTR_SENSOR_STATE,
     ATTR_SENSOR_STATE_CLASS,
+    DATA_PENDING_UPDATES,
+    DOMAIN,
     SIGNAL_SENSOR_UPDATE,
 )
 from .helpers import device_info
 
+
+_LOGGER = logging.getLogger(__name__)
 
 class MobileAppEntity(RestoreEntity):
     """Representation of a mobile app entity."""
 
     _attr_should_poll = False
 
-    def __init__(self, config: dict, entry: ConfigEntry) -> None:
+    def __init__(self,config: dict, entry: ConfigEntry) -> None:
         """Initialize the entity."""
+        _LOGGER.debug("Initializing MobileAppEntity with config: %s", config)
         self._config = config
         self._entry = entry
         self._registration = entry.data
@@ -53,6 +62,9 @@ class MobileAppEntity(RestoreEntity):
 
     async def async_added_to_hass(self) -> None:
         """Register callbacks."""
+
+        _LOGGER.debug("Adding MobileAppEntity to hass: %s", self._attr_unique_id)
+
         self.async_on_remove(
             async_dispatcher_connect(
                 self.hass,
@@ -60,6 +72,19 @@ class MobileAppEntity(RestoreEntity):
                 self._handle_update,
             )
         )
+
+        # Check if there's a pending update for this entity
+        pending_updates = self.hass.data[DOMAIN].get(DATA_PENDING_UPDATES, {})
+        if self._attr_unique_id in pending_updates:
+            _LOGGER.debug(
+                "Applying pending update for %s: %s",
+                self._attr_unique_id,
+                pending_updates[self._attr_unique_id],
+            )
+            # Apply the pending update
+            self._handle_update(pending_updates[self._attr_unique_id])
+            # Remove from pending updates
+            del pending_updates[self._attr_unique_id]
 
         if (state := await self.async_get_last_state()) is None:
             return
@@ -69,6 +94,10 @@ class MobileAppEntity(RestoreEntity):
     async def async_restore_last_state(self, last_state: State) -> None:
         """Restore previous state."""
         config = self._config
+
+        _LOGGER.debug("Restoring last state: %s", last_state)
+        _LOGGER.debug("Current config: %s", config)
+
         if config[ATTR_SENSOR_STATE] is None or config[ATTR_SENSOR_STATE] == STATE_UNKNOWN:
             config[ATTR_SENSOR_STATE] = last_state.state
             config[ATTR_SENSOR_ATTRIBUTES] = {
@@ -86,6 +115,7 @@ class MobileAppEntity(RestoreEntity):
     @callback
     def _handle_update(self, data: dict[str, Any]) -> None:
         """Handle async event updates."""
+        _LOGGER.debug("Handling update for %s with data: %s", self._attr_unique_id, data)
         self._config.update(data)
         self._async_update_attr_from_config()
         self.async_write_ha_state()
