@@ -16,8 +16,10 @@ from homeassistant.core import Event, HomeAssistant
 from homeassistant.helpers import (
     config_validation as cv,
     device_registry as dr,
+    entity_registry as er,
     discovery,
 )
+
 from homeassistant.helpers.storage import Store
 from homeassistant.helpers.typing import ConfigType
 
@@ -53,11 +55,15 @@ from .http_api import RegistrationsView
 from .timers import async_handle_timer_event
 from .util import async_create_cloud_hook, supports_push
 from .webhook import handle_webhook
+from .coordinator import MobileAppCoordinator, MobileAppData, MobileAppConfigEntry
+
+import logging
 
 PLATFORMS = [Platform.BINARY_SENSOR, Platform.DEVICE_TRACKER, Platform.SENSOR]
 
 CONFIG_SCHEMA = cv.empty_config_schema(DOMAIN)
 
+_LOGGER = logging.getLogger(__name__)
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the mobile app component."""
@@ -106,8 +112,16 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     return True
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_setup_entry(hass: HomeAssistant, entry: MobileAppConfigEntry) -> bool:
     """Set up a mobile_app entry."""
+
+    _LOGGER.debug("Setting up mobile_app entry: %s", entry.entry_id)
+    _LOGGER.debug("Entry: %s", entry)
+
+    entry.runtime_data = MobileAppData(
+        coordinator = MobileAppCoordinator(hass, entry)
+    )
+
     registration = entry.data
 
     webhook_id = registration[CONF_WEBHOOK_ID]

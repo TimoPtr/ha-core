@@ -41,26 +41,30 @@ from homeassistant.helpers.update_coordinator import (
     UpdateFailed,
 )
 
-
-
+from .coordinator import MobileAppConfigEntry, MobileAppCoordinator
 
 
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(
     hass: HomeAssistant,
-    config_entry: ConfigEntry,
+    config_entry: MobileAppConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up mobile app sensor from a config entry."""
+
+    _LOGGER.error("Setting up mobile_app sensor entry: %s", config_entry.entry_id)
+
     entities = []
 
     webhook_id = config_entry.data[CONF_WEBHOOK_ID]
 
+    coordinator: MobileAppCoordinator = config_entry.runtime_data.coordinator
+
     entity_registry = er.async_get(hass)
     entries = er.async_entries_for_config_entry(entity_registry, config_entry.entry_id)
     for entry in entries:
-        if entry.domain != ENTITY_TYPE or entry.disabled_by:
+        if entry.domain != ENTITY_TYPE: # or entry.disabled_by:
             continue
         config: dict[str, Any] = {
             ATTR_SENSOR_ATTRIBUTES: {},
@@ -75,16 +79,17 @@ async def async_setup_entry(
         }
         if capabilities := entry.capabilities:
             config[ATTR_SENSOR_STATE_CLASS] = capabilities.get(ATTR_SENSOR_STATE_CLASS)
-        entities.append(MobileAppSensor(config, config_entry))
+        entities.append(MobileAppSensor(coordinator, config, config_entry))
 
     async_add_entities(entities)
+
+    _LOGGER.error("Coordinator data in async_setup_entry sensors: %s", coordinator.data)
 
     @callback
     def handle_sensor_registration(data):
         if data[CONF_WEBHOOK_ID] != webhook_id:
             return
-        _LOGGER.debug("Registering new sensor with data: %s", data)
-        async_add_entities([MobileAppSensor(data, config_entry)])
+        async_add_entities([MobileAppSensor(coordinator, data, config_entry)])
 
     config_entry.async_on_unload(
         async_dispatcher_connect(
@@ -102,11 +107,6 @@ class MobileAppSensor(MobileAppEntity, RestoreSensor):
         """Restore previous state."""
         await super().async_restore_last_state(last_state)
         config = self._config
-
-
-        _LOGGER.debug("Restoring last state: %s", last_state)
-        _LOGGER.debug("Current config: %s", config)
-
 
         if not (last_sensor_data := await self.async_get_last_sensor_data()):
             # Workaround to handle migration to RestoreSensor, can be removed

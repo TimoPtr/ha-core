@@ -24,16 +24,20 @@ from .const import (
 )
 from .entity import MobileAppEntity
 
+from .coordinator import MobileAppConfigEntry, MobileAppCoordinator
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
-    config_entry: ConfigEntry,
+    config_entry: MobileAppConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up mobile app binary sensor from a config entry."""
     entities = []
 
     webhook_id = config_entry.data[CONF_WEBHOOK_ID]
+
+    coordinator: MobileAppCoordinator = config_entry.runtime_data.coordinator
 
     entity_registry = er.async_get(hass)
     entries = er.async_entries_for_config_entry(entity_registry, config_entry.entry_id)
@@ -50,7 +54,7 @@ async def async_setup_entry(
             ATTR_SENSOR_UNIQUE_ID: entry.unique_id,
             ATTR_SENSOR_ENTITY_CATEGORY: entry.entity_category,
         }
-        entities.append(MobileAppBinarySensor(config, config_entry))
+        entities.append(MobileAppBinarySensor(coordinator, config, config_entry))
 
     async_add_entities(entities)
 
@@ -59,7 +63,7 @@ async def async_setup_entry(
         if data[CONF_WEBHOOK_ID] != webhook_id:
             return
 
-        async_add_entities([MobileAppBinarySensor(data, config_entry)])
+        async_add_entities([MobileAppBinarySensor(coordinator, data, config_entry)])
 
     async_dispatcher_connect(
         hass,

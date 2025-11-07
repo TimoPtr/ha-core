@@ -33,7 +33,6 @@ from homeassistant.components.device_tracker import (
 from homeassistant.components.frontend import MANIFEST_JSON
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 from homeassistant.components.zone import DOMAIN as ZONE_DOMAIN
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     ATTR_DEVICE_ID,
     ATTR_DOMAIN,
@@ -118,12 +117,14 @@ from .helpers import (
     webhook_response,
 )
 
+from .coordinator import MobileAppConfigEntry, MobileAppCoordinator
+
 _LOGGER = logging.getLogger(__name__)
 
 DELAY_SAVE = 10
 
 WEBHOOK_COMMANDS: Registry[
-    str, Callable[[HomeAssistant, ConfigEntry, Any], Coroutine[Any, Any, Response]]
+    str, Callable[[HomeAssistant, MobileAppConfigEntry, Any], Coroutine[Any, Any, Response]]
 ] = Registry()
 
 SENSOR_TYPES = (ATTR_SENSOR_TYPE_BINARY_SENSOR, ATTR_SENSOR_TYPE_SENSOR)
@@ -187,7 +188,7 @@ async def handle_webhook(
     if webhook_id in hass.data[DOMAIN][DATA_DELETED_IDS]:
         return Response(status=410)
 
-    config_entry: ConfigEntry = hass.data[DOMAIN][DATA_CONFIG_ENTRIES][webhook_id]
+    config_entry: MobileAppConfigEntry = hass.data[DOMAIN][DATA_CONFIG_ENTRIES][webhook_id]
 
     device_name: str = config_entry.data[ATTR_DEVICE_NAME]
 
@@ -277,7 +278,7 @@ async def handle_webhook(
     }
 )
 async def webhook_call_service(
-    hass: HomeAssistant, config_entry: ConfigEntry, data: dict[str, Any]
+    hass: HomeAssistant, config_entry: MobileAppConfigEntry, data: dict[str, Any]
 ) -> Response:
     """Handle a call service webhook."""
     try:
@@ -310,7 +311,7 @@ async def webhook_call_service(
     }
 )
 async def webhook_fire_event(
-    hass: HomeAssistant, config_entry: ConfigEntry, data: dict[str, Any]
+    hass: HomeAssistant, config_entry: MobileAppConfigEntry, data: dict[str, Any]
 ) -> Response:
     """Handle a fire event webhook."""
     event_type: str = data[ATTR_EVENT_TYPE]
@@ -332,7 +333,7 @@ async def webhook_fire_event(
     }
 )
 async def webhook_conversation_process(
-    hass: HomeAssistant, config_entry: ConfigEntry, data: dict[str, Any]
+    hass: HomeAssistant, config_entry: MobileAppConfigEntry, data: dict[str, Any]
 ) -> Response:
     """Handle a conversation process webhook."""
     result = await conversation.async_converse(
@@ -348,7 +349,7 @@ async def webhook_conversation_process(
 @WEBHOOK_COMMANDS.register("stream_camera")
 @validate_schema({vol.Required(ATTR_CAMERA_ENTITY_ID): cv.string})
 async def webhook_stream_camera(
-    hass: HomeAssistant, config_entry: ConfigEntry, data: dict[str, str]
+    hass: HomeAssistant, config_entry: MobileAppConfigEntry, data: dict[str, str]
 ) -> Response:
     """Handle a request to HLS-stream a camera."""
     if (camera_state := hass.states.get(data[ATTR_CAMERA_ENTITY_ID])) is None:
@@ -391,7 +392,7 @@ def _cached_template(template_str: str, hass: HomeAssistant) -> template.Templat
     }
 )
 async def webhook_render_template(
-    hass: HomeAssistant, config_entry: ConfigEntry, data: dict[str, Any]
+    hass: HomeAssistant, config_entry: MobileAppConfigEntry, data: dict[str, Any]
 ) -> Response:
     """Handle a render template webhook."""
     resp = {}
@@ -424,7 +425,7 @@ async def webhook_render_template(
     )
 )
 async def webhook_update_location(
-    hass: HomeAssistant, config_entry: ConfigEntry, data: dict[str, Any]
+    hass: HomeAssistant, config_entry: MobileAppConfigEntry, data: dict[str, Any]
 ) -> Response:
     """Handle an update location webhook."""
     async_dispatcher_send(
@@ -445,7 +446,7 @@ async def webhook_update_location(
     }
 )
 async def webhook_update_registration(
-    hass: HomeAssistant, config_entry: ConfigEntry, data: dict[str, Any]
+    hass: HomeAssistant, config_entry: MobileAppConfigEntry, data: dict[str, Any]
 ) -> Response:
     """Handle an update registration webhook."""
     new_registration = {**config_entry.data, **data}
@@ -473,7 +474,7 @@ async def webhook_update_registration(
 
 @WEBHOOK_COMMANDS.register("enable_encryption")
 async def webhook_enable_encryption(
-    hass: HomeAssistant, config_entry: ConfigEntry, data: Any
+    hass: HomeAssistant, config_entry: MobileAppConfigEntry, data: Any
 ) -> Response:
     """Handle a encryption enable webhook."""
     if config_entry.data[ATTR_SUPPORTS_ENCRYPTION]:
@@ -551,7 +552,7 @@ def _extract_sensor_unique_id(webhook_id: str, unique_id: str) -> str:
     )
 )
 async def webhook_register_sensor(
-    hass: HomeAssistant, config_entry: ConfigEntry, data: dict[str, Any]
+    hass: HomeAssistant, config_entry: MobileAppConfigEntry, data: dict[str, Any]
 ) -> Response:
     """Handle a register sensor webhook."""
     entity_type: str = data[ATTR_SENSOR_TYPE]
@@ -602,21 +603,16 @@ async def webhook_register_sensor(
         if changes:
             entity_registry.async_update_entity(existing_sensor, **changes)
 
-        # Only send update signal if entity is not disabled
-        # Otherwise, store it as pending update
-        if not entry.disabled_by:
-            _LOGGER.debug("Dispatch signal %s", f"{SIGNAL_SENSOR_UPDATE}-{unique_store_key}")
-            async_dispatcher_send(hass, f"{SIGNAL_SENSOR_UPDATE}-{unique_store_key}", data)
-        else:
-            _LOGGER.debug(
-                "Entity %s is disabled, storing pending update", unique_store_key
-            )
-            hass.data[DOMAIN][DATA_PENDING_UPDATES][unique_store_key] = data
+        _update_coordinator_data(config_entry, unique_store_key, data)
     else:
         data[CONF_UNIQUE_ID] = unique_store_key
         data[CONF_NAME] = (
             f"{config_entry.data[ATTR_DEVICE_NAME]} {data[ATTR_SENSOR_NAME]}"
         )
+
+        # We need to keep the coordinator data in sync with new registrations
+        # since the creation of the entity is using the coordinator data.
+        _update_coordinator_data(config_entry, unique_store_key, data)
 
         register_signal = f"{DOMAIN}_{data[ATTR_SENSOR_TYPE]}_register"
         async_dispatcher_send(hass, register_signal, data)
@@ -647,7 +643,7 @@ async def webhook_register_sensor(
     )
 )
 async def webhook_update_sensor_states(
-    hass: HomeAssistant, config_entry: ConfigEntry, data: list[dict[str, Any]]
+    hass: HomeAssistant, config_entry: MobileAppConfigEntry, data: list[dict[str, Any]]
 ) -> Response:
     """Handle an update sensor states webhook."""
     device_name: str = config_entry.data[ATTR_DEVICE_NAME]
@@ -695,11 +691,13 @@ async def webhook_update_sensor_states(
             continue
 
         sensor[CONF_WEBHOOK_ID] = config_entry.data[CONF_WEBHOOK_ID]
-        async_dispatcher_send(
-            hass,
-            f"{SIGNAL_SENSOR_UPDATE}-{unique_store_key}",
-            sensor,
-        )
+        _update_coordinator_data(config_entry, unique_store_key, sensor)
+
+        # async_dispatcher_send(
+        #     hass,
+        #     f"{SIGNAL_SENSOR_UPDATE}-{unique_store_key}",
+        #     sensor,
+        # )
 
         resp[unique_id] = {"success": True}
 
@@ -711,10 +709,19 @@ async def webhook_update_sensor_states(
 
     return webhook_response(resp, registration=config_entry.data)
 
+def _update_coordinator_data(
+    config_entry: MobileAppConfigEntry,
+    unique_id: str,
+    data: dict[str, Any],
+) -> None:
+    """Update coordinator data for a specific sensor."""
+    coordinator = config_entry.runtime_data.coordinator
+    coordinator.data[unique_id] = data
+    coordinator.async_set_updated_data(coordinator.data)
 
 @WEBHOOK_COMMANDS.register("get_zones")
 async def webhook_get_zones(
-    hass: HomeAssistant, config_entry: ConfigEntry, data: Any
+    hass: HomeAssistant, config_entry: MobileAppConfigEntry, data: Any
 ) -> Response:
     """Handle a get zones webhook."""
     zones = [
@@ -726,7 +733,7 @@ async def webhook_get_zones(
 
 @WEBHOOK_COMMANDS.register("get_config")
 async def webhook_get_config(
-    hass: HomeAssistant, config_entry: ConfigEntry, data: Any
+    hass: HomeAssistant, config_entry: MobileAppConfigEntry, data: Any
 ) -> Response:
     """Handle a get config webhook."""
     hass_config = hass.config.as_dict()
@@ -776,7 +783,7 @@ async def webhook_get_config(
 @WEBHOOK_COMMANDS.register("scan_tag")
 @validate_schema({vol.Required("tag_id"): cv.string})
 async def webhook_scan_tag(
-    hass: HomeAssistant, config_entry: ConfigEntry, data: dict[str, str]
+    hass: HomeAssistant, config_entry: MobileAppConfigEntry, data: dict[str, str]
 ) -> Response:
     """Handle a fire event webhook."""
     await tag.async_scan_tag(
