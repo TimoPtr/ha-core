@@ -1,0 +1,1333 @@
+# serializer version: 1
+# name: test_multi_unit_snapshot[binary_sensor][binary_sensor.indoor_unit_0_compressor-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_0')]>,
+    'disabled_by': None,
+    'domain': 'binary_sensor',
+    'entity_category': None,
+    'entity_id': 'binary_sensor.indoor_unit_0_compressor',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Compressor',
+    'options': dict({
+    }),
+    'original_device_class': <BinarySensorDeviceClass.RUNNING: 'running'>,
+    'original_icon': None,
+    'original_name': 'Compressor',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'compressor',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_0_compressor',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[binary_sensor][binary_sensor.indoor_unit_0_compressor-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'running',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 0 Compressor',
+    }),
+    'context': <ANY>,
+    'entity_id': 'binary_sensor.indoor_unit_0_compressor',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'on',
+  })
+# ---
+# name: test_multi_unit_snapshot[binary_sensor][binary_sensor.indoor_unit_0_filter_sign-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_0')]>,
+    'disabled_by': None,
+    'domain': 'binary_sensor',
+    'entity_category': None,
+    'entity_id': 'binary_sensor.indoor_unit_0_filter_sign',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Filter sign',
+    'options': dict({
+    }),
+    'original_device_class': <BinarySensorDeviceClass.PROBLEM: 'problem'>,
+    'original_icon': None,
+    'original_name': 'Filter sign',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'filter_sign',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_0_filter_sign',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[binary_sensor][binary_sensor.indoor_unit_0_filter_sign-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'problem',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 0 Filter sign',
+    }),
+    'context': <ANY>,
+    'entity_id': 'binary_sensor.indoor_unit_0_filter_sign',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'off',
+  })
+# ---
+# name: test_multi_unit_snapshot[binary_sensor][binary_sensor.indoor_unit_1_compressor-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_1')]>,
+    'disabled_by': None,
+    'domain': 'binary_sensor',
+    'entity_category': None,
+    'entity_id': 'binary_sensor.indoor_unit_1_compressor',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Compressor',
+    'options': dict({
+    }),
+    'original_device_class': <BinarySensorDeviceClass.RUNNING: 'running'>,
+    'original_icon': None,
+    'original_name': 'Compressor',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'compressor',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_1_compressor',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[binary_sensor][binary_sensor.indoor_unit_1_compressor-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'running',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 1 Compressor',
+    }),
+    'context': <ANY>,
+    'entity_id': 'binary_sensor.indoor_unit_1_compressor',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'on',
+  })
+# ---
+# name: test_multi_unit_snapshot[binary_sensor][binary_sensor.indoor_unit_1_filter_sign-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_1')]>,
+    'disabled_by': None,
+    'domain': 'binary_sensor',
+    'entity_category': None,
+    'entity_id': 'binary_sensor.indoor_unit_1_filter_sign',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Filter sign',
+    'options': dict({
+    }),
+    'original_device_class': <BinarySensorDeviceClass.PROBLEM: 'problem'>,
+    'original_icon': None,
+    'original_name': 'Filter sign',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'filter_sign',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_1_filter_sign',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[binary_sensor][binary_sensor.indoor_unit_1_filter_sign-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'problem',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 1 Filter sign',
+    }),
+    'context': <ANY>,
+    'entity_id': 'binary_sensor.indoor_unit_1_filter_sign',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'off',
+  })
+# ---
+# name: test_multi_unit_snapshot[binary_sensor][binary_sensor.indoor_unit_7_compressor-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_7')]>,
+    'disabled_by': None,
+    'domain': 'binary_sensor',
+    'entity_category': None,
+    'entity_id': 'binary_sensor.indoor_unit_7_compressor',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Compressor',
+    'options': dict({
+    }),
+    'original_device_class': <BinarySensorDeviceClass.RUNNING: 'running'>,
+    'original_icon': None,
+    'original_name': 'Compressor',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'compressor',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_7_compressor',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[binary_sensor][binary_sensor.indoor_unit_7_compressor-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'running',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 7 Compressor',
+    }),
+    'context': <ANY>,
+    'entity_id': 'binary_sensor.indoor_unit_7_compressor',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'on',
+  })
+# ---
+# name: test_multi_unit_snapshot[binary_sensor][binary_sensor.indoor_unit_7_filter_sign-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_7')]>,
+    'disabled_by': None,
+    'domain': 'binary_sensor',
+    'entity_category': None,
+    'entity_id': 'binary_sensor.indoor_unit_7_filter_sign',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Filter sign',
+    'options': dict({
+    }),
+    'original_device_class': <BinarySensorDeviceClass.PROBLEM: 'problem'>,
+    'original_icon': None,
+    'original_name': 'Filter sign',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'filter_sign',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_7_filter_sign',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[binary_sensor][binary_sensor.indoor_unit_7_filter_sign-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'problem',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 7 Filter sign',
+    }),
+    'context': <ANY>,
+    'entity_id': 'binary_sensor.indoor_unit_7_filter_sign',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'off',
+  })
+# ---
+# name: test_multi_unit_snapshot[binary_sensor][binary_sensor.inmbsmhi048o000_hardware_communication-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000')]>,
+    'disabled_by': None,
+    'domain': 'binary_sensor',
+    'entity_category': None,
+    'entity_id': 'binary_sensor.inmbsmhi048o000_hardware_communication',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Hardware communication',
+    'options': dict({
+    }),
+    'original_device_class': <BinarySensorDeviceClass.CONNECTIVITY: 'connectivity'>,
+    'original_icon': None,
+    'original_name': 'Hardware communication',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'hw_communication',
+    'unique_id': '01JTESTINTESISMULTI0000000_hw_communication',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[binary_sensor][binary_sensor.inmbsmhi048o000_hardware_communication-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'connectivity',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'INMBSMHI048O000 Hardware communication',
+    }),
+    'context': <ANY>,
+    'entity_id': 'binary_sensor.inmbsmhi048o000_hardware_communication',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'on',
+  })
+# ---
+# name: test_multi_unit_snapshot[button][button.indoor_unit_0_reset_error-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_0')]>,
+    'disabled_by': None,
+    'domain': 'button',
+    'entity_category': None,
+    'entity_id': 'button.indoor_unit_0_reset_error',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Reset error',
+    'options': dict({
+    }),
+    'original_device_class': <ButtonDeviceClass.RESTART: 'restart'>,
+    'original_icon': None,
+    'original_name': 'Reset error',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'reset_error',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_0_reset_error',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[button][button.indoor_unit_0_reset_error-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'restart',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 0 Reset error',
+    }),
+    'context': <ANY>,
+    'entity_id': 'button.indoor_unit_0_reset_error',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'unknown',
+  })
+# ---
+# name: test_multi_unit_snapshot[button][button.indoor_unit_0_reset_filter_sign-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_0')]>,
+    'disabled_by': None,
+    'domain': 'button',
+    'entity_category': None,
+    'entity_id': 'button.indoor_unit_0_reset_filter_sign',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Reset filter sign',
+    'options': dict({
+    }),
+    'original_device_class': <ButtonDeviceClass.RESTART: 'restart'>,
+    'original_icon': None,
+    'original_name': 'Reset filter sign',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'reset_filter',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_0_reset_filter',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[button][button.indoor_unit_0_reset_filter_sign-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'restart',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 0 Reset filter sign',
+    }),
+    'context': <ANY>,
+    'entity_id': 'button.indoor_unit_0_reset_filter_sign',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'unknown',
+  })
+# ---
+# name: test_multi_unit_snapshot[button][button.indoor_unit_1_reset_error-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_1')]>,
+    'disabled_by': None,
+    'domain': 'button',
+    'entity_category': None,
+    'entity_id': 'button.indoor_unit_1_reset_error',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Reset error',
+    'options': dict({
+    }),
+    'original_device_class': <ButtonDeviceClass.RESTART: 'restart'>,
+    'original_icon': None,
+    'original_name': 'Reset error',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'reset_error',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_1_reset_error',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[button][button.indoor_unit_1_reset_error-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'restart',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 1 Reset error',
+    }),
+    'context': <ANY>,
+    'entity_id': 'button.indoor_unit_1_reset_error',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'unknown',
+  })
+# ---
+# name: test_multi_unit_snapshot[button][button.indoor_unit_1_reset_filter_sign-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_1')]>,
+    'disabled_by': None,
+    'domain': 'button',
+    'entity_category': None,
+    'entity_id': 'button.indoor_unit_1_reset_filter_sign',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Reset filter sign',
+    'options': dict({
+    }),
+    'original_device_class': <ButtonDeviceClass.RESTART: 'restart'>,
+    'original_icon': None,
+    'original_name': 'Reset filter sign',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'reset_filter',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_1_reset_filter',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[button][button.indoor_unit_1_reset_filter_sign-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'restart',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 1 Reset filter sign',
+    }),
+    'context': <ANY>,
+    'entity_id': 'button.indoor_unit_1_reset_filter_sign',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'unknown',
+  })
+# ---
+# name: test_multi_unit_snapshot[button][button.indoor_unit_7_reset_error-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_7')]>,
+    'disabled_by': None,
+    'domain': 'button',
+    'entity_category': None,
+    'entity_id': 'button.indoor_unit_7_reset_error',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Reset error',
+    'options': dict({
+    }),
+    'original_device_class': <ButtonDeviceClass.RESTART: 'restart'>,
+    'original_icon': None,
+    'original_name': 'Reset error',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'reset_error',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_7_reset_error',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[button][button.indoor_unit_7_reset_error-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'restart',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 7 Reset error',
+    }),
+    'context': <ANY>,
+    'entity_id': 'button.indoor_unit_7_reset_error',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'unknown',
+  })
+# ---
+# name: test_multi_unit_snapshot[button][button.indoor_unit_7_reset_filter_sign-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_7')]>,
+    'disabled_by': None,
+    'domain': 'button',
+    'entity_category': None,
+    'entity_id': 'button.indoor_unit_7_reset_filter_sign',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Reset filter sign',
+    'options': dict({
+    }),
+    'original_device_class': <ButtonDeviceClass.RESTART: 'restart'>,
+    'original_icon': None,
+    'original_name': 'Reset filter sign',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'reset_filter',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_7_reset_filter',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[button][button.indoor_unit_7_reset_filter_sign-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'restart',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 7 Reset filter sign',
+    }),
+    'context': <ANY>,
+    'entity_id': 'button.indoor_unit_7_reset_filter_sign',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'unknown',
+  })
+# ---
+# name: test_multi_unit_snapshot[climate][climate.indoor_unit_0-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <ClimateEntityCapabilityAttribute.FAN_MODES: 'fan_modes'>: list([
+        'low',
+        'medium',
+        'high',
+        'powerful',
+      ]),
+      <ClimateEntityCapabilityAttribute.HVAC_MODES: 'hvac_modes'>: list([
+        <HVACMode.OFF: 'off'>,
+        <HVACMode.COOL: 'cool'>,
+        <HVACMode.HEAT: 'heat'>,
+        <HVACMode.FAN_ONLY: 'fan_only'>,
+        <HVACMode.AUTO: 'auto'>,
+        <HVACMode.DRY: 'dry'>,
+      ]),
+      <ClimateEntityCapabilityAttribute.MAX_TEMP: 'max_temp'>: 30.0,
+      <ClimateEntityCapabilityAttribute.MIN_TEMP: 'min_temp'>: 16.0,
+      <ClimateEntityCapabilityAttribute.SWING_MODES: 'swing_modes'>: list([
+        'swing',
+        'position_1',
+        'position_2',
+        'position_3',
+        'position_4',
+      ]),
+      <ClimateEntityCapabilityAttribute.TARGET_TEMP_STEP: 'target_temp_step'>: 1.0,
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_0')]>,
+    'disabled_by': None,
+    'domain': 'climate',
+    'entity_category': None,
+    'entity_id': 'climate.indoor_unit_0',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': None,
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': None,
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': <ClimateEntityFeature: 425>,
+    'translation_key': 'air_conditioner',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_0_air_conditioner',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[climate][climate.indoor_unit_0-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <ClimateEntityStateAttribute.CURRENT_TEMPERATURE: 'current_temperature'>: 21.0,
+      <ClimateEntityStateAttribute.FAN_MODE: 'fan_mode'>: 'medium',
+      <ClimateEntityCapabilityAttribute.FAN_MODES: 'fan_modes'>: list([
+        'low',
+        'medium',
+        'high',
+        'powerful',
+      ]),
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 0',
+      <ClimateEntityStateAttribute.HVAC_ACTION: 'hvac_action'>: <HVACAction.HEATING: 'heating'>,
+      <ClimateEntityCapabilityAttribute.HVAC_MODES: 'hvac_modes'>: list([
+        <HVACMode.OFF: 'off'>,
+        <HVACMode.COOL: 'cool'>,
+        <HVACMode.HEAT: 'heat'>,
+        <HVACMode.FAN_ONLY: 'fan_only'>,
+        <HVACMode.AUTO: 'auto'>,
+        <HVACMode.DRY: 'dry'>,
+      ]),
+      <ClimateEntityCapabilityAttribute.MAX_TEMP: 'max_temp'>: 30.0,
+      <ClimateEntityCapabilityAttribute.MIN_TEMP: 'min_temp'>: 16.0,
+      <EntityStateAttribute.SUPPORTED_FEATURES: 'supported_features'>: <ClimateEntityFeature: 425>,
+      <ClimateEntityStateAttribute.SWING_MODE: 'swing_mode'>: 'swing',
+      <ClimateEntityCapabilityAttribute.SWING_MODES: 'swing_modes'>: list([
+        'swing',
+        'position_1',
+        'position_2',
+        'position_3',
+        'position_4',
+      ]),
+      <ClimateEntityCapabilityAttribute.TARGET_TEMP_STEP: 'target_temp_step'>: 1.0,
+      <ClimateEntityStateAttribute.TARGET_TEMPERATURE: 'temperature'>: 22.0,
+      <ClimateEntityStateAttribute.TEMPERATURE_UNIT: 'temperature_unit'>: <UnitOfTemperature.CELSIUS: '°C'>,
+    }),
+    'context': <ANY>,
+    'entity_id': 'climate.indoor_unit_0',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'heat',
+  })
+# ---
+# name: test_multi_unit_snapshot[climate][climate.indoor_unit_1-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <ClimateEntityCapabilityAttribute.FAN_MODES: 'fan_modes'>: list([
+        'low',
+        'medium',
+        'high',
+        'powerful',
+      ]),
+      <ClimateEntityCapabilityAttribute.HVAC_MODES: 'hvac_modes'>: list([
+        <HVACMode.OFF: 'off'>,
+        <HVACMode.COOL: 'cool'>,
+        <HVACMode.HEAT: 'heat'>,
+        <HVACMode.FAN_ONLY: 'fan_only'>,
+        <HVACMode.AUTO: 'auto'>,
+        <HVACMode.DRY: 'dry'>,
+      ]),
+      <ClimateEntityCapabilityAttribute.MAX_TEMP: 'max_temp'>: 30.0,
+      <ClimateEntityCapabilityAttribute.MIN_TEMP: 'min_temp'>: 16.0,
+      <ClimateEntityCapabilityAttribute.SWING_MODES: 'swing_modes'>: list([
+        'swing',
+        'position_1',
+        'position_2',
+        'position_3',
+        'position_4',
+      ]),
+      <ClimateEntityCapabilityAttribute.TARGET_TEMP_STEP: 'target_temp_step'>: 1.0,
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_1')]>,
+    'disabled_by': None,
+    'domain': 'climate',
+    'entity_category': None,
+    'entity_id': 'climate.indoor_unit_1',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': None,
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': None,
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': <ClimateEntityFeature: 425>,
+    'translation_key': 'air_conditioner',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_1_air_conditioner',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[climate][climate.indoor_unit_1-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <ClimateEntityStateAttribute.CURRENT_TEMPERATURE: 'current_temperature'>: 21.0,
+      <ClimateEntityStateAttribute.FAN_MODE: 'fan_mode'>: 'medium',
+      <ClimateEntityCapabilityAttribute.FAN_MODES: 'fan_modes'>: list([
+        'low',
+        'medium',
+        'high',
+        'powerful',
+      ]),
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 1',
+      <ClimateEntityStateAttribute.HVAC_ACTION: 'hvac_action'>: <HVACAction.HEATING: 'heating'>,
+      <ClimateEntityCapabilityAttribute.HVAC_MODES: 'hvac_modes'>: list([
+        <HVACMode.OFF: 'off'>,
+        <HVACMode.COOL: 'cool'>,
+        <HVACMode.HEAT: 'heat'>,
+        <HVACMode.FAN_ONLY: 'fan_only'>,
+        <HVACMode.AUTO: 'auto'>,
+        <HVACMode.DRY: 'dry'>,
+      ]),
+      <ClimateEntityCapabilityAttribute.MAX_TEMP: 'max_temp'>: 30.0,
+      <ClimateEntityCapabilityAttribute.MIN_TEMP: 'min_temp'>: 16.0,
+      <EntityStateAttribute.SUPPORTED_FEATURES: 'supported_features'>: <ClimateEntityFeature: 425>,
+      <ClimateEntityStateAttribute.SWING_MODE: 'swing_mode'>: 'swing',
+      <ClimateEntityCapabilityAttribute.SWING_MODES: 'swing_modes'>: list([
+        'swing',
+        'position_1',
+        'position_2',
+        'position_3',
+        'position_4',
+      ]),
+      <ClimateEntityCapabilityAttribute.TARGET_TEMP_STEP: 'target_temp_step'>: 1.0,
+      <ClimateEntityStateAttribute.TARGET_TEMPERATURE: 'temperature'>: 22.0,
+      <ClimateEntityStateAttribute.TEMPERATURE_UNIT: 'temperature_unit'>: <UnitOfTemperature.CELSIUS: '°C'>,
+    }),
+    'context': <ANY>,
+    'entity_id': 'climate.indoor_unit_1',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'heat',
+  })
+# ---
+# name: test_multi_unit_snapshot[climate][climate.indoor_unit_7-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <ClimateEntityCapabilityAttribute.FAN_MODES: 'fan_modes'>: list([
+        'low',
+        'medium',
+        'high',
+        'powerful',
+      ]),
+      <ClimateEntityCapabilityAttribute.HVAC_MODES: 'hvac_modes'>: list([
+        <HVACMode.OFF: 'off'>,
+        <HVACMode.COOL: 'cool'>,
+        <HVACMode.HEAT: 'heat'>,
+        <HVACMode.FAN_ONLY: 'fan_only'>,
+        <HVACMode.AUTO: 'auto'>,
+        <HVACMode.DRY: 'dry'>,
+      ]),
+      <ClimateEntityCapabilityAttribute.MAX_TEMP: 'max_temp'>: 30.0,
+      <ClimateEntityCapabilityAttribute.MIN_TEMP: 'min_temp'>: 16.0,
+      <ClimateEntityCapabilityAttribute.SWING_MODES: 'swing_modes'>: list([
+        'swing',
+        'position_1',
+        'position_2',
+        'position_3',
+        'position_4',
+      ]),
+      <ClimateEntityCapabilityAttribute.TARGET_TEMP_STEP: 'target_temp_step'>: 1.0,
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_7')]>,
+    'disabled_by': None,
+    'domain': 'climate',
+    'entity_category': None,
+    'entity_id': 'climate.indoor_unit_7',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': None,
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': None,
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': <ClimateEntityFeature: 425>,
+    'translation_key': 'air_conditioner',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_7_air_conditioner',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[climate][climate.indoor_unit_7-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <ClimateEntityStateAttribute.CURRENT_TEMPERATURE: 'current_temperature'>: 21.0,
+      <ClimateEntityStateAttribute.FAN_MODE: 'fan_mode'>: 'medium',
+      <ClimateEntityCapabilityAttribute.FAN_MODES: 'fan_modes'>: list([
+        'low',
+        'medium',
+        'high',
+        'powerful',
+      ]),
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 7',
+      <ClimateEntityStateAttribute.HVAC_ACTION: 'hvac_action'>: <HVACAction.HEATING: 'heating'>,
+      <ClimateEntityCapabilityAttribute.HVAC_MODES: 'hvac_modes'>: list([
+        <HVACMode.OFF: 'off'>,
+        <HVACMode.COOL: 'cool'>,
+        <HVACMode.HEAT: 'heat'>,
+        <HVACMode.FAN_ONLY: 'fan_only'>,
+        <HVACMode.AUTO: 'auto'>,
+        <HVACMode.DRY: 'dry'>,
+      ]),
+      <ClimateEntityCapabilityAttribute.MAX_TEMP: 'max_temp'>: 30.0,
+      <ClimateEntityCapabilityAttribute.MIN_TEMP: 'min_temp'>: 16.0,
+      <EntityStateAttribute.SUPPORTED_FEATURES: 'supported_features'>: <ClimateEntityFeature: 425>,
+      <ClimateEntityStateAttribute.SWING_MODE: 'swing_mode'>: 'swing',
+      <ClimateEntityCapabilityAttribute.SWING_MODES: 'swing_modes'>: list([
+        'swing',
+        'position_1',
+        'position_2',
+        'position_3',
+        'position_4',
+      ]),
+      <ClimateEntityCapabilityAttribute.TARGET_TEMP_STEP: 'target_temp_step'>: 1.0,
+      <ClimateEntityStateAttribute.TARGET_TEMPERATURE: 'temperature'>: 22.0,
+      <ClimateEntityStateAttribute.TEMPERATURE_UNIT: 'temperature_unit'>: <UnitOfTemperature.CELSIUS: '°C'>,
+    }),
+    'context': <ANY>,
+    'entity_id': 'climate.indoor_unit_7',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'heat',
+  })
+# ---
+# name: test_multi_unit_snapshot[sensor][sensor.indoor_unit_0_error-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <SensorEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'none',
+        'initialising',
+        'communication_error',
+        'unit_error',
+      ]),
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_0')]>,
+    'disabled_by': None,
+    'domain': 'sensor',
+    'entity_category': None,
+    'entity_id': 'sensor.indoor_unit_0_error',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Error',
+    'options': dict({
+    }),
+    'original_device_class': <SensorDeviceClass.ENUM: 'enum'>,
+    'original_icon': None,
+    'original_name': 'Error',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'error',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_0_error',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[sensor][sensor.indoor_unit_0_error-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      'code': 0,
+      'description': None,
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'enum',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 0 Error',
+      <SensorEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'none',
+        'initialising',
+        'communication_error',
+        'unit_error',
+      ]),
+      'remote_controller_code': None,
+    }),
+    'context': <ANY>,
+    'entity_id': 'sensor.indoor_unit_0_error',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'none',
+  })
+# ---
+# name: test_multi_unit_snapshot[sensor][sensor.indoor_unit_1_error-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <SensorEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'none',
+        'initialising',
+        'communication_error',
+        'unit_error',
+      ]),
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_1')]>,
+    'disabled_by': None,
+    'domain': 'sensor',
+    'entity_category': None,
+    'entity_id': 'sensor.indoor_unit_1_error',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Error',
+    'options': dict({
+    }),
+    'original_device_class': <SensorDeviceClass.ENUM: 'enum'>,
+    'original_icon': None,
+    'original_name': 'Error',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'error',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_1_error',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[sensor][sensor.indoor_unit_1_error-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      'code': 0,
+      'description': None,
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'enum',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 1 Error',
+      <SensorEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'none',
+        'initialising',
+        'communication_error',
+        'unit_error',
+      ]),
+      'remote_controller_code': None,
+    }),
+    'context': <ANY>,
+    'entity_id': 'sensor.indoor_unit_1_error',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'none',
+  })
+# ---
+# name: test_multi_unit_snapshot[sensor][sensor.indoor_unit_7_error-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <SensorEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'none',
+        'initialising',
+        'communication_error',
+        'unit_error',
+      ]),
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_7')]>,
+    'disabled_by': None,
+    'domain': 'sensor',
+    'entity_category': None,
+    'entity_id': 'sensor.indoor_unit_7_error',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Error',
+    'options': dict({
+    }),
+    'original_device_class': <SensorDeviceClass.ENUM: 'enum'>,
+    'original_icon': None,
+    'original_name': 'Error',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'error',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_7_error',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[sensor][sensor.indoor_unit_7_error-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      'code': 0,
+      'description': None,
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'enum',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 7 Error',
+      <SensorEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'none',
+        'initialising',
+        'communication_error',
+        'unit_error',
+      ]),
+      'remote_controller_code': None,
+    }),
+    'context': <ANY>,
+    'entity_id': 'sensor.indoor_unit_7_error',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'none',
+  })
+# ---
+# name: test_multi_unit_snapshot[switch][switch.indoor_unit_0_remote_controller_lock-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_0')]>,
+    'disabled_by': None,
+    'domain': 'switch',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'switch.indoor_unit_0_remote_controller_lock',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Remote controller lock',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Remote controller lock',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'remote_controller_lock',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_0_remote_controller_lock',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[switch][switch.indoor_unit_0_remote_controller_lock-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 0 Remote controller lock',
+    }),
+    'context': <ANY>,
+    'entity_id': 'switch.indoor_unit_0_remote_controller_lock',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'off',
+  })
+# ---
+# name: test_multi_unit_snapshot[switch][switch.indoor_unit_1_remote_controller_lock-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_1')]>,
+    'disabled_by': None,
+    'domain': 'switch',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'switch.indoor_unit_1_remote_controller_lock',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Remote controller lock',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Remote controller lock',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'remote_controller_lock',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_1_remote_controller_lock',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[switch][switch.indoor_unit_1_remote_controller_lock-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 1 Remote controller lock',
+    }),
+    'context': <ANY>,
+    'entity_id': 'switch.indoor_unit_1_remote_controller_lock',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'off',
+  })
+# ---
+# name: test_multi_unit_snapshot[switch][switch.indoor_unit_7_remote_controller_lock-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': None,
+    'device_class': None,
+    'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISMULTI0000000_unit_7')]>,
+    'disabled_by': None,
+    'domain': 'switch',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'switch.indoor_unit_7_remote_controller_lock',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Remote controller lock',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Remote controller lock',
+    'platform': 'intesis_modbus',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'remote_controller_lock',
+    'unique_id': '01JTESTINTESISMULTI0000000_unit_7_remote_controller_lock',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_multi_unit_snapshot[switch][switch.indoor_unit_7_remote_controller_lock-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Indoor unit 7 Remote controller lock',
+    }),
+    'context': <ANY>,
+    'entity_id': 'switch.indoor_unit_7_remote_controller_lock',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'off',
+  })
+# ---
