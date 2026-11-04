@@ -13,7 +13,7 @@ from propcache.api import cached_property
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryError
-from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import device_registry as dr, issue_registry as ir
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import CONF_MODEL, DOMAIN, MANUFACTURER, SCAN_INTERVAL
@@ -61,7 +61,32 @@ class IntesisCoordinator(DataUpdateCoordinator[UpdateReport]):
                 "every sub-system failed to refresh", list(report.failed.values())
             )
         self._log_component_changes(report)
+        self._check_temperature_format()
         return report
+
+    def _check_temperature_format(self) -> None:
+        """Raise a repair issue when the DIP switches no longer match the entry."""
+        device = self.device
+        if not isinstance(device, IntesisSingleUnitGateway):
+            return
+        detected = device.detected_temperature_format
+        configured = device.temperature_format
+        issue_id = f"temperature_format_{self.config_entry.entry_id}"
+        if detected is None or detected is configured:
+            ir.async_delete_issue(self.hass, DOMAIN, issue_id)
+            return
+        ir.async_create_issue(
+            self.hass,
+            DOMAIN,
+            issue_id,
+            is_fixable=False,
+            severity=ir.IssueSeverity.WARNING,
+            translation_key="temperature_format_changed",
+            translation_placeholders={
+                "configured": configured.value,
+                "detected": detected.value,
+            },
+        )
 
     def _log_component_changes(self, report: UpdateReport) -> None:
         """Log a sub-system's first failure and its recovery, once each."""

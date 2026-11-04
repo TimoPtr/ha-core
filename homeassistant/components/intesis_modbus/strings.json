@@ -260,6 +260,12 @@
       "message": "The gateway on this port reports another device ID than the model this entry was set up as. Reconfigure the entry with the right model."
     }
   },
+  "issues": {
+    "temperature_format_changed": {
+      "description": "The gateway now reports temperatures as {detected}, but this entry was set up for {configured}. Someone probably changed the SW4 DIP switches. Reconfigure the gateway in Home Assistant and pick the matching temperature format, or set the switches back and power-cycle the gateway.",
+      "title": "Temperature format changed"
+    }
+  },
   "selector": {
     "framing": {
       "options": {
