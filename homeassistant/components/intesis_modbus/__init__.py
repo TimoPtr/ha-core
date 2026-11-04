@@ -11,7 +11,7 @@ from .const import CONF_MODEL, CONF_UNIT_ID
 from .coordinator import IntesisConfigEntry, IntesisCoordinator, IntesisRuntimeData
 from .helpers import create_device, create_modbus_params
 
-PLATFORMS: list[Platform] = []
+PLATFORMS: list[Platform] = [Platform.CLIMATE]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: IntesisConfigEntry) -> None:

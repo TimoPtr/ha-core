@@ -37,6 +37,7 @@ def mock_config_entry() -> MockConfigEntry:
     """Mock a single-unit gateway config entry."""
     return MockConfigEntry(
         domain=DOMAIN,
+        entry_id="01JTESTINTESISSINGLE000000",
         unique_id="/dev/ttyUSB0:1",
         data=MOCK_SERIAL_ENTRY_DATA,
         title="INMBSMHI001R000",

@@ -107,6 +107,28 @@
       "name": "Indoor unit {number}"
     }
   },
+  "entity": {
+    "climate": {
+      "air_conditioner": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "powerful": "Powerful"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "position_1": "Position 1",
+              "position_2": "Position 2",
+              "position_3": "Position 3",
+              "position_4": "Position 4",
+              "swing": "Swing"
+            }
+          }
+        }
+      }
+    }
+  },
   "exceptions": {
     "modbus_error": {
       "message": "Could not read the gateway."
