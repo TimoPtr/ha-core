@@ -28,6 +28,7 @@ from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
+from .const import CONF_HAS_VANE
 from .coordinator import IntesisConfigEntry, IntesisCoordinator
 from .entity import IntesisEntity, IntesisEntityDescription
 
@@ -94,7 +95,16 @@ async def async_setup_entry(
     coordinator = runtime_data.coordinator
     device = runtime_data.device
     if isinstance(device, IntesisSingleUnitGateway):
-        async_add_entities([IntesisClimate(coordinator, device, CLIMATE_DESCRIPTION)])
+        async_add_entities(
+            [
+                IntesisClimate(
+                    coordinator,
+                    device,
+                    CLIMATE_DESCRIPTION,
+                    has_vane=entry.data.get(CONF_HAS_VANE, True),
+                )
+            ]
+        )
         return
     async_add_entities(
         IntesisClimate(
@@ -109,13 +119,6 @@ class IntesisClimate(IntesisEntity, ClimateEntity):
 
     entity_description: IntesisClimateEntityDescription
     _attr_native_temperature_unit = UnitOfTemperature.CELSIUS
-    _attr_supported_features = (
-        ClimateEntityFeature.TARGET_TEMPERATURE
-        | ClimateEntityFeature.FAN_MODE
-        | ClimateEntityFeature.SWING_MODE
-        | ClimateEntityFeature.TURN_ON
-        | ClimateEntityFeature.TURN_OFF
-    )
 
     def __init__(
         self,
@@ -124,10 +127,19 @@ class IntesisClimate(IntesisEntity, ClimateEntity):
         description: IntesisClimateEntityDescription,
         *,
         indoor_unit: IndoorUnitView | None = None,
+        has_vane: bool = True,
     ) -> None:
         """Bind to the air conditioner the entity controls."""
         super().__init__(coordinator, description, indoor_unit=indoor_unit)
         self._ac = ac
+        self._attr_supported_features = (
+            ClimateEntityFeature.TARGET_TEMPERATURE
+            | ClimateEntityFeature.FAN_MODE
+            | ClimateEntityFeature.TURN_ON
+            | ClimateEntityFeature.TURN_OFF
+        )
+        if has_vane:
+            self._attr_supported_features |= ClimateEntityFeature.SWING_MODE
 
     @property
     @override

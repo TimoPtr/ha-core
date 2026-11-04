@@ -4,6 +4,7 @@
     'entry': dict({
       'baudrate': 9600,
       'device': '**REDACTED**',
+      'has_vane': True,
       'model': 'INMBSMHI001R000',
       'temperature_format': 'decicelsius',
       'type': 'serial',

@@ -12,12 +12,13 @@ from modbus_connection import (
     ModbusTimeoutError,
 )
 from modbus_connection.mock import MockModbusConnection, MockModbusUnit
-from pytest_homeassistant.common import MockConfigEntry
+from pytest_homeassistant.common import MockConfigEntry, get_schema_suggested_value
 
 from homeassistant import config_entries
 from homeassistant.components.intesis_modbus.const import (
     CONF_BAUDRATE,
     CONF_FRAMING,
+    CONF_HAS_VANE,
     CONF_MODEL,
     CONF_TEMPERATURE_FORMAT,
     DOMAIN,
@@ -101,6 +102,26 @@ async def _start_tcp(hass: HomeAssistant) -> str:
     return result["flow_id"]
 
 
+async def _finish_features(
+    hass: HomeAssistant,
+    flow_id: str,
+    *,
+    expected_default: bool = True,
+    has_vane: bool = True,
+) -> Any:
+    """Confirm the features step, checking what the probe pre-filled."""
+    result = await hass.config_entries.flow.async_configure(flow_id)
+    assert result["type"] is FlowResultType.FORM
+    assert result["step_id"] == "features"
+    assert (
+        get_schema_suggested_value(result["data_schema"].schema, CONF_HAS_VANE)
+        is expected_default
+    )
+    return await hass.config_entries.flow.async_configure(
+        flow_id, {CONF_HAS_VANE: has_vane}
+    )
+
+
 async def test_serial_auto_detects_mhi(
     hass: HomeAssistant, mock_setup_entry: AsyncMock
 ) -> None:
@@ -110,6 +131,8 @@ async def test_serial_auto_detects_mhi(
         result = await hass.config_entries.flow.async_configure(
             flow_id, MOCK_SERIAL_INPUT
         )
+        assert result["step_id"] == "features"
+        result = await _finish_features(hass, flow_id)
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert result["title"] == "INMBSMHI001R000"
     assert result["data"] == MOCK_SERIAL_ENTRY_DATA
@@ -178,9 +201,28 @@ async def test_initialising_gateway_asks_temperature_format(
         result = await hass.config_entries.flow.async_configure(
             flow_id, {CONF_TEMPERATURE_FORMAT: "celsius"}
         )
+        result = await _finish_features(hass, flow_id, expected_default=False)
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert result["result"].unique_id == "/dev/ttyUSB0:1"
     assert result["data"][CONF_TEMPERATURE_FORMAT] == "celsius"
+    assert result["data"][CONF_HAS_VANE] is True
+
+
+async def test_vane_at_init_value_defaults_to_no_vane(
+    hass: HomeAssistant, mock_setup_entry: AsyncMock
+) -> None:
+    """A unit that never reported a vane position is offered without one."""
+    connection = _seeded()
+    connection.for_unit(1).holding[3] = 0x8000
+    with _patch_temporary_unit(connection):
+        flow_id = await _start_serial(hass)
+        await hass.config_entries.flow.async_configure(flow_id, MOCK_SERIAL_INPUT)
+        result = await _finish_features(
+            hass, flow_id, expected_default=False, has_vane=False
+        )
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert result["result"].unique_id == "/dev/ttyUSB0:1"
+    assert result["data"][CONF_HAS_VANE] is False
 
 
 async def test_cannot_connect(hass: HomeAssistant, mock_setup_entry: AsyncMock) -> None:
@@ -195,10 +237,10 @@ async def test_cannot_connect(hass: HomeAssistant, mock_setup_entry: AsyncMock) 
         assert result["type"] is FlowResultType.FORM
         assert result["errors"] == {"base": "cannot_connect"}
         connection.for_unit(1).fail_requests(None)
-        result = await hass.config_entries.flow.async_configure(
-            flow_id, MOCK_SERIAL_INPUT
-        )
+        await hass.config_entries.flow.async_configure(flow_id, MOCK_SERIAL_INPUT)
+        result = await _finish_features(hass, flow_id)
     assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert result["result"].unique_id == "/dev/ttyUSB0:1"
 
 
 async def test_serial_port_in_use_with_other_settings(
@@ -215,9 +257,8 @@ async def test_serial_port_in_use_with_other_settings(
     assert result["type"] is FlowResultType.FORM
     assert result["errors"] == {"base": "cannot_connect"}
     with _patch_temporary_unit(_seeded()):
-        result = await hass.config_entries.flow.async_configure(
-            flow_id, MOCK_SERIAL_INPUT
-        )
+        await hass.config_entries.flow.async_configure(flow_id, MOCK_SERIAL_INPUT)
+        result = await _finish_features(hass, flow_id)
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert result["result"].unique_id == "/dev/ttyUSB0:1"
 
@@ -233,7 +274,8 @@ async def test_tcp_rtu_over_tcp(
     }
     with _patch_temporary_unit(_seeded()):
         flow_id = await _start_tcp(hass)
-        result = await hass.config_entries.flow.async_configure(flow_id, user_input)
+        await hass.config_entries.flow.async_configure(flow_id, user_input)
+        result = await _finish_features(hass, flow_id)
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert result["result"].unique_id == "192.168.1.50:502:1"
     assert result["data"][CONF_MODEL] == "INMBSMHI001R000"
@@ -294,11 +336,13 @@ async def test_reconfigure_changes_port(
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"], {**MOCK_SERIAL_INPUT, CONF_DEVICE: "/dev/ttyUSB1"}
         )
+        result = await _finish_features(hass, result["flow_id"], has_vane=False)
     assert result["type"] is FlowResultType.ABORT
     assert result["reason"] == "reconfigure_successful"
     assert mock_config_entry.unique_id == "/dev/ttyUSB1:1"
     assert mock_config_entry.data[CONF_DEVICE] == "/dev/ttyUSB1"
     assert mock_config_entry.data[CONF_MODEL] == "INMBSMHI001R000"
+    assert mock_config_entry.data[CONF_HAS_VANE] is False
 
 
 async def test_reconfigure_to_other_entry_port_aborts(
@@ -321,6 +365,7 @@ async def test_reconfigure_to_other_entry_port_aborts(
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"], {**MOCK_SERIAL_INPUT, CONF_DEVICE: "/dev/ttyUSB1"}
         )
+        result = await _finish_features(hass, result["flow_id"])
     assert result["type"] is FlowResultType.ABORT
     assert result["reason"] == "already_configured"
 
@@ -346,6 +391,7 @@ async def test_reconfigure_tcp_recovers_from_cannot_connect(
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"], {**MOCK_TCP_INPUT, CONF_BAUDRATE: 9600}
         )
+        result = await _finish_features(hass, result["flow_id"])
     assert result["type"] is FlowResultType.ABORT
     assert result["reason"] == "reconfigure_successful"
     assert mock_config_entry.unique_id == "192.168.1.50:502:1"

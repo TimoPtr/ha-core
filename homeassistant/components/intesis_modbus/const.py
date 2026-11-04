@@ -10,6 +10,7 @@ CONF_BAUDRATE: Final = "baudrate"
 CONF_MODEL: Final = "model"
 CONF_TEMPERATURE_FORMAT: Final = "temperature_format"
 CONF_FRAMING: Final = "framing"
+CONF_HAS_VANE: Final = "has_vane"
 
 TYPE_SERIAL: Final = "serial"
 TYPE_TCP: Final = "tcp"

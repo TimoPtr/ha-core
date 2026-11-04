@@ -7,6 +7,7 @@ from modbus_connection.mock import MockModbusUnit
 from homeassistant.components.intesis_modbus.const import (
     CONF_BAUDRATE,
     CONF_FRAMING,
+    CONF_HAS_VANE,
     CONF_MODEL,
     CONF_TEMPERATURE_FORMAT,
     CONF_UNIT_ID,
@@ -24,6 +25,7 @@ MOCK_SERIAL_ENTRY_DATA = {
     **MOCK_SERIAL_INPUT,
     CONF_MODEL: "INMBSMHI001R000",
     CONF_TEMPERATURE_FORMAT: "decicelsius",
+    CONF_HAS_VANE: True,
 }
 MOCK_TCP_INPUT = {
     CONF_HOST: "192.168.1.50",

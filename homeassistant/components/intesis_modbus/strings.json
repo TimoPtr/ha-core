@@ -9,6 +9,15 @@
       "wrong_model": "The gateway answered with a device ID that does not belong to this model. Pick the model that matches the label on the gateway."
     },
     "step": {
+      "features": {
+        "data": {
+          "has_vane": "Unit has a swing vane"
+        },
+        "data_description": {
+          "has_vane": "The gateway cannot tell whether the indoor unit has a motorised vane, so this is pre-filled from what it last reported. Turn it off for a unit without one and the climate entity will not offer swing modes."
+        },
+        "description": "Confirm what the indoor unit behind the gateway can do."
+      },
       "model": {
         "data": {
           "model": "Gateway model"

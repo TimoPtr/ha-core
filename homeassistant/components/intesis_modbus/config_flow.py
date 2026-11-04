@@ -25,6 +25,7 @@ from homeassistant.const import CONF_DEVICE, CONF_HOST, CONF_PORT, CONF_TYPE
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.selector import (
+    BooleanSelector,
     NumberSelector,
     NumberSelectorConfig,
     NumberSelectorMode,
@@ -38,6 +39,7 @@ from homeassistant.helpers.selector import (
 from .const import (
     CONF_BAUDRATE,
     CONF_FRAMING,
+    CONF_HAS_VANE,
     CONF_MODEL,
     CONF_TEMPERATURE_FORMAT,
     CONF_UNIT_ID,
@@ -56,11 +58,13 @@ _LOGGER = logging.getLogger(__name__)
 
 STEP_MODEL = "model"
 STEP_TEMPERATURE_FORMAT = "temperature_format"
+STEP_FEATURES = "features"
 STEP_RECONFIGURE_SERIAL = "reconfigure_serial"
 STEP_RECONFIGURE_TCP = "reconfigure_tcp"
 
 DEVICE_ID_REGISTER = 49
 SETPOINT_REGISTER = 4
+VANE_REGISTER = 3
 
 UNIT_ID_SELECTOR = probatio.All(
     NumberSelector(NumberSelectorConfig(mode=NumberSelectorMode.BOX, min=1, max=247)),
@@ -125,12 +129,18 @@ STEP_TEMPERATURE_FORMAT_DATA_SCHEMA = probatio.Schema(
 )
 
 
+STEP_FEATURES_DATA_SCHEMA = probatio.Schema(
+    {probatio.Required(CONF_HAS_VANE, default=True): BooleanSelector()}
+)
+
+
 @dataclass(frozen=True)
 class ProbeResult:
     """What a gateway answered when asked who it is."""
 
     device_id: int | None
     raw_setpoint: int | None
+    raw_vane: int | None
 
 
 async def _async_read_or_none(unit: ModbusUnit, address: int) -> int | None:
@@ -148,7 +158,8 @@ async def _async_probe(hass: HomeAssistant, data: dict[str, Any]) -> ProbeResult
     async with async_get_temporary_unit(hass, params, data[CONF_UNIT_ID]) as unit:
         device_id = await _async_read_or_none(unit, DEVICE_ID_REGISTER)
         raw_setpoint = await _async_read_or_none(unit, SETPOINT_REGISTER)
-    return ProbeResult(device_id, raw_setpoint)
+        raw_vane = await _async_read_or_none(unit, VANE_REGISTER)
+    return ProbeResult(device_id, raw_setpoint, raw_vane)
 
 
 class IntesisModbusConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -159,8 +170,9 @@ class IntesisModbusConfigFlow(ConfigFlow, domain=DOMAIN):
     def __init__(self) -> None:
         """Initialize the flow."""
         self._link: dict[str, Any] = {}
-        self._probe = ProbeResult(None, None)
+        self._probe = ProbeResult(None, None, None)
         self._pending: dict[str, Any] = {}
+        self._model: GatewayModel | None = None
 
     @override
     async def async_step_user(
@@ -276,27 +288,49 @@ class IntesisModbusConfigFlow(ConfigFlow, domain=DOMAIN):
     ) -> ConfigFlowResult:
         """Ask for the DIP-switch temperature format when it cannot be detected."""
         if user_input is not None:
-            return self._async_create_or_update(
-                {
-                    **self._pending,
-                    CONF_TEMPERATURE_FORMAT: user_input[CONF_TEMPERATURE_FORMAT],
-                }
-            )
+            self._pending[CONF_TEMPERATURE_FORMAT] = user_input[CONF_TEMPERATURE_FORMAT]
+            return await self.async_step_features()
         return self.async_show_form(
             step_id=STEP_TEMPERATURE_FORMAT,
             data_schema=STEP_TEMPERATURE_FORMAT_DATA_SCHEMA,
         )
 
+    async def async_step_features(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Confirm what the unit behind the gateway can do.
+
+        The gateway has no capability register for the vane, so the probe's
+        reading of register 3 only pre-fills the answer.
+        """
+        if user_input is not None:
+            return self._async_create_or_update(
+                {**self._pending, CONF_HAS_VANE: user_input[CONF_HAS_VANE]}
+            )
+        if self.source == SOURCE_RECONFIGURE:
+            has_vane = self._get_reconfigure_entry().data.get(CONF_HAS_VANE, True)
+        else:
+            assert self._model is not None
+            has_vane = self._probe.raw_vane in self._model.brand.vane_positions
+        return self.async_show_form(
+            step_id=STEP_FEATURES,
+            data_schema=self.add_suggested_values_to_schema(
+                STEP_FEATURES_DATA_SCHEMA, {CONF_HAS_VANE: has_vane}
+            ),
+        )
+
     async def _async_finish(self, model: GatewayModel) -> ConfigFlowResult:
-        """Settle the temperature format for a single-unit gateway, then finish."""
+        """Settle format and features for a single-unit gateway, then finish."""
         data = {**self._link, CONF_MODEL: model.name}
-        if model.family is GatewayFamily.SINGLE_UNIT:
-            fmt = detect_temperature_format(self._probe.raw_setpoint)
-            if fmt is None:
-                self._pending = data
-                return await self.async_step_temperature_format()
-            data[CONF_TEMPERATURE_FORMAT] = fmt.value
-        return self._async_create_or_update(data)
+        if model.family is not GatewayFamily.SINGLE_UNIT:
+            return self._async_create_or_update(data)
+        self._model = model
+        self._pending = data
+        fmt = detect_temperature_format(self._probe.raw_setpoint)
+        if fmt is None:
+            return await self.async_step_temperature_format()
+        data[CONF_TEMPERATURE_FORMAT] = fmt.value
+        return await self.async_step_features()
 
     def _async_create_or_update(self, data: dict[str, Any]) -> ConfigFlowResult:
         """Create the entry, or update the one being reconfigured."""

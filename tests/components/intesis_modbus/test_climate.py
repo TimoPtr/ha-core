@@ -25,9 +25,14 @@ from homeassistant.components.climate import (
     SERVICE_SET_TEMPERATURE,
     SERVICE_TURN_OFF,
     SERVICE_TURN_ON,
+    ClimateEntityFeature,
     HVACMode,
 )
-from homeassistant.components.intesis_modbus.const import SCAN_INTERVAL
+from homeassistant.components.intesis_modbus.const import (
+    CONF_HAS_VANE,
+    DOMAIN,
+    SCAN_INTERVAL,
+)
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import (
     ATTR_ENTITY_ID,
@@ -40,7 +45,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import entity_registry as er
 
-from . import seed_initialising_single_unit
+from . import MOCK_SERIAL_ENTRY_DATA, seed_initialising_single_unit
 
 ENTITY_ID = "climate.inmbsmhi001r000"
 
@@ -350,3 +355,26 @@ async def test_turn_on_and_off(
         CLIMATE_DOMAIN, SERVICE_TURN_ON, {ATTR_ENTITY_ID: ENTITY_ID}, blocking=True
     )
     assert [(w.address, w.values[0]) for w in writes] == [(0, 0), (0, 1)]
+
+
+async def test_unit_without_vane_has_no_swing(
+    hass: HomeAssistant,
+    mock_get_unit: MagicMock,
+) -> None:
+    """An entry set up without a vane offers no swing mode at all."""
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        entry_id="01JTESTINTESISNOVANE000000",
+        unique_id="/dev/ttyUSB0:1",
+        data={**MOCK_SERIAL_ENTRY_DATA, CONF_HAS_VANE: False},
+        title="INMBSMHI001R000",
+    )
+    entry.add_to_hass(hass)
+    await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    state = hass.states.get(ENTITY_ID)
+    assert state is not None
+    assert "swing_mode" not in state.attributes
+    assert "swing_modes" not in state.attributes
+    assert not state.attributes["supported_features"] & ClimateEntityFeature.SWING_MODE
+    assert state.attributes["fan_mode"] == "medium"
