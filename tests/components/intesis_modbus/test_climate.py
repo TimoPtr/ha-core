@@ -4,6 +4,7 @@ from datetime import timedelta
 from unittest.mock import MagicMock, patch
 
 from freezegun.api import FrozenDateTimeFactory
+from intesis_gw_modbus import UnsupportedValueError
 from modbus_connection import IllegalDataAddressError, ModbusTimeoutError
 from modbus_connection.mock import MockModbusConnection, WriteEvent
 import pytest
@@ -359,3 +360,5 @@ async def test_unexpected_write_error_propagates(
     entity = hass.data["entity_components"][CLIMATE_DOMAIN].get_entity(ENTITY_ID)
     with pytest.raises(RuntimeError):
         entity._raise_for_write(RuntimeError("boom"))
+    with pytest.raises(ServiceValidationError):
+        entity._raise_for_write(UnsupportedValueError("not on this unit"))

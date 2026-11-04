@@ -54,9 +54,10 @@ class IntesisEntity(CoordinatorEntity[IntesisCoordinator]):
     @override
     def available(self) -> bool:
         """Whether this entity's sub-system answered the most recent poll."""
-        if not super().available or self.coordinator.data is None:
-            return False
-        return self.entity_description.report_name in self.coordinator.data.updated
+        return (
+            super().available
+            and self.entity_description.report_name in self.coordinator.data.updated
+        )
 
     def _raise_for_write(self, err: Exception) -> NoReturn:
         """Turn a library error from a write into the right HA exception."""

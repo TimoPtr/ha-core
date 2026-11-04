@@ -1,8 +1,39 @@
 {
   "entity": {
+    "binary_sensor": {
+      "compressor": {
+        "default": "mdi:engine"
+      },
+      "filter_sign": {
+        "default": "mdi:air-filter"
+      }
+    },
     "climate": {
       "air_conditioner": {
         "default": "mdi:air-conditioner"
+      }
+    },
+    "sensor": {
+      "control_lock": {
+        "default": "mdi:lock-outline"
+      },
+      "error": {
+        "default": "mdi:alert-circle",
+        "state": {
+          "none": "mdi:check-circle"
+        }
+      },
+      "fan_speed_count": {
+        "default": "mdi:fan"
+      },
+      "real_setpoint": {
+        "default": "mdi:thermostat"
+      },
+      "setpoint_max": {
+        "default": "mdi:thermometer-chevron-up"
+      },
+      "setpoint_min": {
+        "default": "mdi:thermometer-chevron-down"
       }
     }
   }
