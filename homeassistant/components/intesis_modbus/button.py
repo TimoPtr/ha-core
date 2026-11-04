@@ -16,7 +16,12 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .coordinator import IntesisConfigEntry, IntesisCoordinator
-from .entity import MULTI_UNIT_ONLY, IntesisEntity, IntesisEntityDescription
+from .entity import (
+    MULTI_UNIT_ONLY,
+    IntesisEntity,
+    IntesisEntityDescription,
+    async_add_indoor_unit_entities,
+)
 
 PARALLEL_UPDATES = 1
 
@@ -83,10 +88,14 @@ async def async_setup_entry(
             IntesisButton(coordinator, device, description) for description in BUTTONS
         )
         return
-    async_add_entities(
-        IntesisButton(coordinator, unit, description, indoor_unit=unit)
-        for number, unit in sorted(device.indoor_units.items())
-        for description in INDOOR_UNIT_BUTTONS
+    async_add_indoor_unit_entities(
+        entry,
+        device,
+        async_add_entities,
+        lambda unit: [
+            IntesisButton(coordinator, unit, description, indoor_unit=unit)
+            for description in INDOOR_UNIT_BUTTONS
+        ],
     )
 
 

@@ -4,6 +4,7 @@ from datetime import timedelta
 from unittest.mock import patch
 
 from freezegun.api import FrozenDateTimeFactory
+from intesis_gw_modbus.multi_unit.device import REDISCOVERY_BATCH
 from modbus_connection.mock import MockModbusConnection, WriteEvent
 import pytest
 from pytest_homeassistant.common import (
@@ -308,6 +309,33 @@ async def test_unit_losing_communication_goes_unavailable(
     assert hass.states.get("climate.indoor_unit_7").state == STATE_UNAVAILABLE
     assert hass.states.get("sensor.indoor_unit_7_error").state == STATE_UNAVAILABLE
     assert hass.states.get("climate.indoor_unit_0").state == HVACMode.HEAT
+
+
+async def test_unit_coming_online_later_gets_entities(
+    hass: HomeAssistant,
+    freezer: FrozenDateTimeFactory,
+    init_multi_integration: MockConfigEntry,
+    mock_multi_connection: MockModbusConnection,
+    device_registry: dr.DeviceRegistry,
+) -> None:
+    """A unit the gateway starts talking to after setup gets its own entities."""
+    assert hass.states.get("climate.indoor_unit_5") is None
+    seed_multi_unit(mock_multi_connection.for_unit(1), present=(0, 1, 5, 7))
+    for _ in range(-(-45 // REDISCOVERY_BATCH)):
+        freezer.tick(timedelta(seconds=SCAN_INTERVAL + 1))
+        async_fire_time_changed(hass)
+        await hass.async_block_till_done(wait_background_tasks=True)
+    assert hass.states.get("climate.indoor_unit_5").state == HVACMode.HEAT
+    assert hass.states.get("sensor.indoor_unit_5_error").state == "none"
+    assert hass.states.get("binary_sensor.indoor_unit_5_filter_sign").state is not None
+    assert hass.states.get("button.indoor_unit_5_reset_filter_sign") is not None
+    assert hass.states.get("switch.indoor_unit_5_remote_controller_lock") is not None
+    assert (
+        device_registry.async_get_device_by_identifier(
+            (DOMAIN, f"{ENTRY_ID}_unit_5"), config_entry_id=ENTRY_ID
+        )
+        is not None
+    )
 
 
 async def test_half_degree_setpoint_is_refused_before_any_write(

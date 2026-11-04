@@ -2,7 +2,7 @@
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Final, override
+from typing import Final, override
 
 from intesis_gw_modbus import (
     IndoorUnitView,
@@ -19,7 +19,12 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .coordinator import IntesisConfigEntry, IntesisCoordinator
-from .entity import MULTI_UNIT_ONLY, IntesisEntity, IntesisEntityDescription
+from .entity import (
+    MULTI_UNIT_ONLY,
+    IntesisEntity,
+    IntesisEntityDescription,
+    async_add_indoor_unit_entities,
+)
 
 PARALLEL_UPDATES = 1
 
@@ -102,16 +107,19 @@ async def async_setup_entry(
             for description in BINARY_SENSORS
         )
         return
-    entities: list[IntesisBinarySensor[Any]] = [
+    async_add_entities(
         IntesisBinarySensor(coordinator, device, description)
         for description in GATEWAY_BINARY_SENSORS
-    ]
-    entities.extend(
-        IntesisBinarySensor(coordinator, unit, description, indoor_unit=unit)
-        for number, unit in sorted(device.indoor_units.items())
-        for description in INDOOR_UNIT_BINARY_SENSORS
     )
-    async_add_entities(entities)
+    async_add_indoor_unit_entities(
+        entry,
+        device,
+        async_add_entities,
+        lambda unit: [
+            IntesisBinarySensor(coordinator, unit, description, indoor_unit=unit)
+            for description in INDOOR_UNIT_BINARY_SENSORS
+        ],
+    )
 
 
 class IntesisBinarySensor[TargetT](IntesisEntity, BinarySensorEntity):

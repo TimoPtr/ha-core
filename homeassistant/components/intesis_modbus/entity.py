@@ -1,21 +1,54 @@
 """Base entity for Intesis Modbus gateways."""
 
-from collections.abc import Awaitable, Callable
+from collections.abc import Awaitable, Callable, Iterable
 from dataclasses import dataclass
 from typing import override
 
-from intesis_gw_modbus import GatewayFamily, IndoorUnitView, UnsupportedValueError
+from intesis_gw_modbus import (
+    GatewayFamily,
+    IndoorUnitView,
+    IntesisMultiUnitGateway,
+    UnsupportedValueError,
+)
 from modbus_connection import ModbusError
 
+from homeassistant.core import callback
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
-from homeassistant.helpers.entity import EntityDescription
+from homeassistant.helpers.entity import Entity, EntityDescription
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
-from .coordinator import IntesisCoordinator
+from .coordinator import IntesisConfigEntry, IntesisCoordinator
 
 SINGLE_UNIT_ONLY = frozenset({GatewayFamily.SINGLE_UNIT})
 MULTI_UNIT_ONLY = frozenset({GatewayFamily.MULTI_UNIT})
+
+
+@callback
+def async_add_indoor_unit_entities(
+    entry: IntesisConfigEntry,
+    device: IntesisMultiUnitGateway,
+    async_add_entities: AddConfigEntryEntitiesCallback,
+    entities_for: Callable[[IndoorUnitView], Iterable[Entity]],
+) -> None:
+    """Add entities for every indoor unit, now and whenever one comes online."""
+    known: set[int] = set()
+
+    @callback
+    def _async_add_new_units() -> None:
+        new = sorted(set(device.indoor_units) - known)
+        known.update(new)
+        async_add_entities(
+            entity
+            for number in new
+            for entity in entities_for(device.indoor_units[number])
+        )
+
+    _async_add_new_units()
+    entry.async_on_unload(
+        entry.runtime_data.coordinator.async_add_listener(_async_add_new_units)
+    )
 
 
 @dataclass(frozen=True, kw_only=True)
