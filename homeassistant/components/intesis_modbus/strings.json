@@ -2,6 +2,7 @@
   "config": {
     "abort": {
       "already_configured": "[%key:common::config_flow::abort::already_configured_device%]",
+      "unsupported_brand": "This is a {brand} gateway. Its code and error tables are not written yet, so it cannot be set up. See the intesis-gw-modbus library for how to contribute them.",
       "wrong_device": "The gateway at the new address is not the same model as the one this entry was set up with. Set it up as a new entry instead."
     },
     "error": {

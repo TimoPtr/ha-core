@@ -5,6 +5,7 @@ import logging
 from typing import Any, override
 
 from intesis_gw_modbus import (
+    KNOWN_DEVICE_IDS,
     MODELS,
     GatewayFamily,
     GatewayModel,
@@ -245,6 +246,13 @@ class IntesisModbusConfigFlow(ConfigFlow, domain=DOMAIN):
                 errors["base"] = "cannot_connect"
                 description_placeholders["error"] = str(err)
             else:
+                if (
+                    brand := KNOWN_DEVICE_IDS.get(self._probe.device_id or -1)
+                ) is not None:
+                    return self.async_abort(
+                        reason="unsupported_brand",
+                        description_placeholders={"brand": brand},
+                    )
                 if (model := model_for_device_id(self._probe.device_id or -1)) is None:
                     return await self.async_step_model()
                 return await self._async_finish(model)

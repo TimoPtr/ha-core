@@ -12,6 +12,7 @@ from modbus_connection import (
     ModbusTimeoutError,
 )
 from modbus_connection.mock import MockModbusConnection, MockModbusUnit
+import pytest
 from pytest_homeassistant.common import MockConfigEntry, get_schema_suggested_value
 
 from homeassistant import config_entries
@@ -145,7 +146,7 @@ async def test_serial_unknown_device_id_asks_model(
 ) -> None:
     """An unknown device id leads to the model step, which checks the pick."""
     connection = _seeded()
-    connection.for_unit(1).holding[49] = 0x0801
+    connection.for_unit(1).holding[49] = 0x7777
     with _patch_temporary_unit(connection):
         flow_id = await _start_serial(hass)
         result = await hass.config_entries.flow.async_configure(
@@ -166,6 +167,34 @@ async def test_serial_unknown_device_id_asks_model(
     assert result["result"].unique_id == "/dev/ttyUSB0:1"
     assert CONF_TEMPERATURE_FORMAT not in result["data"]
     assert result["data"][CONF_MODEL] == "INMBSMHI048O000"
+
+
+@pytest.mark.parametrize(
+    ("device_id", "brand"),
+    [
+        pytest.param(0x0801, "Daikin", id="daikin"),
+        pytest.param(0x1500, "Panasonic", id="panasonic"),
+        pytest.param(0x1F00, "Toshiba", id="toshiba"),
+        pytest.param(0x1000, "LG", id="lg"),
+        pytest.param(0x1400, "Hitachi", id="hitachi"),
+        pytest.param(0x1200, "Samsung", id="samsung"),
+    ],
+)
+async def test_untabled_brand_aborts(
+    hass: HomeAssistant, mock_setup_entry: AsyncMock, device_id: int, brand: str
+) -> None:
+    """A gateway of a brand without code tables is refused by name."""
+    connection = _seeded()
+    connection.for_unit(1).holding[49] = device_id
+    with _patch_temporary_unit(connection):
+        flow_id = await _start_serial(hass)
+        result = await hass.config_entries.flow.async_configure(
+            flow_id, MOCK_SERIAL_INPUT
+        )
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "unsupported_brand"
+    assert result["description_placeholders"] == {"brand": brand}
+    assert mock_setup_entry.call_count == 0
 
 
 async def test_illegal_address_on_49_asks_model(
