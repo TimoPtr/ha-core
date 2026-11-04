@@ -94,12 +94,27 @@ async def test_format_drift_raises_repair_issue(
     await _poll(hass, freezer)
     issue = issue_registry.async_get_issue(DOMAIN, issue_id)
     assert issue is not None
-    assert issue.translation_placeholders == {
-        "configured": "decicelsius",
-        "detected": "celsius",
-    }
+    assert issue.config_entry_id == init_integration.entry_id
+    assert issue.translation_placeholders is None
     unit.holding[4] = 215
     await _poll(hass, freezer)
+    assert issue_registry.async_get_issue(DOMAIN, issue_id) is None
+
+
+async def test_repair_issue_is_removed_with_the_entry(
+    hass: HomeAssistant,
+    freezer: FrozenDateTimeFactory,
+    init_integration: MockConfigEntry,
+    mock_connection: MockModbusConnection,
+    issue_registry: ir.IssueRegistry,
+) -> None:
+    """Deleting the entry takes its open repair issue with it."""
+    mock_connection.for_unit(1).holding[4] = 22
+    await _poll(hass, freezer)
+    issue_id = f"temperature_format_{init_integration.entry_id}"
+    assert issue_registry.async_get_issue(DOMAIN, issue_id) is not None
+    await hass.config_entries.async_remove(init_integration.entry_id)
+    await hass.async_block_till_done()
     assert issue_registry.async_get_issue(DOMAIN, issue_id) is None
 
 

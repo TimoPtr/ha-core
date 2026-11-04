@@ -364,3 +364,25 @@ def test_create_modbus_params_multi() -> None:
     assert create_modbus_params(MOCK_MULTI_ENTRY_DATA) == ModbusTcpParams(
         host="192.168.1.50", port=502
     )
+
+
+async def test_reconfigure_onto_other_family_aborts(
+    hass: HomeAssistant, mock_config_entry: MockConfigEntry, mock_setup_entry: AsyncMock
+) -> None:
+    """A single-unit entry cannot be pointed at a multi-unit gateway."""
+    mock_config_entry.add_to_hass(hass)
+    with _patch_temporary_unit(_seeded(seed_multi_unit, present=(0,))):
+        result = await mock_config_entry.start_reconfigure_flow(hass)
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"], {"next_step_id": "reconfigure_tcp"}
+        )
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"], {**MOCK_TCP_INPUT, CONF_BAUDRATE: 9600}
+        )
+        assert result["step_id"] == "model"
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"], {CONF_MODEL: "INMBSMHI048O000"}
+        )
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "wrong_device"
+    assert mock_config_entry.data[CONF_MODEL] == "INMBSMHI001R000"

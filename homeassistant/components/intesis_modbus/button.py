@@ -84,7 +84,7 @@ async def async_setup_entry(
         )
         return
     async_add_entities(
-        IntesisButton(coordinator, unit, description, unit_number=number)
+        IntesisButton(coordinator, unit, description, indoor_unit=unit)
         for number, unit in sorted(device.indoor_units.items())
         for description in INDOOR_UNIT_BUTTONS
     )
@@ -101,10 +101,10 @@ class IntesisButton[TargetT](IntesisEntity, ButtonEntity):
         target: TargetT,
         description: IntesisButtonDescription[TargetT],
         *,
-        unit_number: int | None = None,
+        indoor_unit: IndoorUnitView | None = None,
     ) -> None:
         """Bind to the object the description commands."""
-        super().__init__(coordinator, description, unit_number=unit_number)
+        super().__init__(coordinator, description, indoor_unit=indoor_unit)
         self._target: TargetT = target
 
     @override

@@ -107,7 +107,7 @@ async def async_setup_entry(
         for description in GATEWAY_BINARY_SENSORS
     ]
     entities.extend(
-        IntesisBinarySensor(coordinator, unit, description, unit_number=number)
+        IntesisBinarySensor(coordinator, unit, description, indoor_unit=unit)
         for number, unit in sorted(device.indoor_units.items())
         for description in INDOOR_UNIT_BINARY_SENSORS
     )
@@ -125,10 +125,10 @@ class IntesisBinarySensor[TargetT](IntesisEntity, BinarySensorEntity):
         target: TargetT,
         description: IntesisBinarySensorDescription[TargetT],
         *,
-        unit_number: int | None = None,
+        indoor_unit: IndoorUnitView | None = None,
     ) -> None:
         """Bind to the object the description reads."""
-        super().__init__(coordinator, description, unit_number=unit_number)
+        super().__init__(coordinator, description, indoor_unit=indoor_unit)
         self._target: TargetT = target
 
     @property

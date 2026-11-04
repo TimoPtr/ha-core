@@ -98,9 +98,9 @@ async def async_setup_entry(
         return
     async_add_entities(
         IntesisClimate(
-            coordinator, unit, INDOOR_UNIT_CLIMATE_DESCRIPTION, unit_number=number
+            coordinator, unit, INDOOR_UNIT_CLIMATE_DESCRIPTION, indoor_unit=unit
         )
-        for number, unit in sorted(device.indoor_units.items())
+        for _, unit in sorted(device.indoor_units.items())
     )
 
 
@@ -123,10 +123,10 @@ class IntesisClimate(IntesisEntity, ClimateEntity):
         ac: AirConditioner,
         description: IntesisClimateEntityDescription,
         *,
-        unit_number: int | None = None,
+        indoor_unit: IndoorUnitView | None = None,
     ) -> None:
         """Bind to the air conditioner the entity controls."""
-        super().__init__(coordinator, description, unit_number=unit_number)
+        super().__init__(coordinator, description, indoor_unit=indoor_unit)
         self._ac = ac
 
     @property

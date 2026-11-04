@@ -304,6 +304,8 @@ class IntesisModbusConfigFlow(ConfigFlow, domain=DOMAIN):
         if self.source != SOURCE_RECONFIGURE:
             return self.async_create_entry(title=title, data=data)
         entry = self._get_reconfigure_entry()
+        if data[CONF_MODEL] != entry.data[CONF_MODEL]:
+            return self.async_abort(reason="wrong_device")
         unique_id = unique_id_for(data)
         for other in self._async_current_entries():
             if other.entry_id != entry.entry_id and other.unique_id == unique_id:

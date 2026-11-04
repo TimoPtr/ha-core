@@ -203,7 +203,7 @@ async def async_setup_entry(
         )
         return
     async_add_entities(
-        IntesisSensor(coordinator, unit, description, unit_number=number)
+        IntesisSensor(coordinator, unit, description, indoor_unit=unit)
         for number, unit in sorted(device.indoor_units.items())
         for description in INDOOR_UNIT_SENSORS
     )
@@ -220,10 +220,10 @@ class IntesisSensor[TargetT](IntesisEntity, SensorEntity):
         target: TargetT,
         description: IntesisSensorDescription[TargetT],
         *,
-        unit_number: int | None = None,
+        indoor_unit: IndoorUnitView | None = None,
     ) -> None:
         """Bind to the object the description reads."""
-        super().__init__(coordinator, description, unit_number=unit_number)
+        super().__init__(coordinator, description, indoor_unit=indoor_unit)
         self._target: TargetT = target
 
     @property
@@ -240,7 +240,7 @@ class IntesisSensor[TargetT](IntesisEntity, SensorEntity):
 
 
 class IntesisTotalSensor(IntesisEntity, RestoreSensor):
-    """A long-term counter: keeps its last value while the gateway is away."""
+    """A long-term counter: restores its last value across restarts."""
 
     entity_description: IntesisSensorDescription[IntesisSingleUnitGateway]
 
@@ -253,11 +253,6 @@ class IntesisTotalSensor(IntesisEntity, RestoreSensor):
         """Bind to the gateway the description reads."""
         super().__init__(coordinator, description)
         self._device = device
-
-    @property
-    @override
-    def available(self) -> bool:
-        return True
 
     @override
     async def async_added_to_hass(self) -> None:

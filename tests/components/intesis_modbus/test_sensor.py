@@ -107,18 +107,20 @@ async def test_temperatures_unavailable_when_block_fails(
     assert hass.states.get(PREFIX + "ambient_temperature").state == "20.3"
 
 
-async def test_operation_hours_keeps_last_value_when_offline(
+async def test_operation_hours_follows_gateway_availability(
     hass: HomeAssistant,
     freezer: FrozenDateTimeFactory,
     init_integration: MockConfigEntry,
     mock_connection: MockModbusConnection,
 ) -> None:
-    """The long-term counter survives a silent gateway."""
+    """The counter goes unavailable with the gateway and keeps its value after."""
     assert hass.states.get(PREFIX + "operation_time").state == "1234"
     mock_connection.for_unit(1).fail_requests(ModbusTimeoutError())
     await _poll(hass, freezer)
+    assert hass.states.get(PREFIX + "operation_time").state == STATE_UNAVAILABLE
+    mock_connection.for_unit(1).fail_requests(None)
+    await _poll(hass, freezer)
     assert hass.states.get(PREFIX + "operation_time").state == "1234"
-    assert hass.states.get(PREFIX + "ambient_temperature").state == STATE_UNAVAILABLE
 
 
 async def test_operation_hours_restores_until_the_gateway_reports(
@@ -149,15 +151,17 @@ async def test_operation_hours_restores_until_the_gateway_reports(
     assert hass.states.get(PREFIX + "operation_time").state == "1234"
 
 
-async def test_operation_hours_ignores_a_refused_control_block(
+async def test_operation_hours_unavailable_when_its_block_fails(
     hass: HomeAssistant,
     freezer: FrozenDateTimeFactory,
     init_integration: MockConfigEntry,
     mock_connection: MockModbusConnection,
 ) -> None:
-    """When only the control block fails the counter keeps its value."""
+    """When only the control block fails the counter is unavailable, not stale."""
     mock_connection.for_unit(1).fail_read(0, IllegalDataAddressError())
     await _poll(hass, freezer)
-    assert hass.states.get(PREFIX + "operation_time").state == "1234"
-    assert hass.states.get(PREFIX + "ambient_temperature").state == STATE_UNAVAILABLE
+    assert hass.states.get(PREFIX + "operation_time").state == STATE_UNAVAILABLE
     assert hass.states.get(PREFIX + "outdoor_intake_temperature").state == "12.5"
+    mock_connection.for_unit(1).fail_read(0, None)
+    await _poll(hass, freezer)
+    assert hass.states.get(PREFIX + "operation_time").state == "1234"

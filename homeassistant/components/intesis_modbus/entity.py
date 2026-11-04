@@ -2,9 +2,9 @@
 
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
-from typing import NoReturn, override
+from typing import override
 
-from intesis_gw_modbus import GatewayFamily, UnsupportedValueError
+from intesis_gw_modbus import GatewayFamily, IndoorUnitView, UnsupportedValueError
 from modbus_connection import ModbusError
 
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
@@ -38,48 +38,46 @@ class IntesisEntity(CoordinatorEntity[IntesisCoordinator]):
         coordinator: IntesisCoordinator,
         description: IntesisEntityDescription,
         *,
-        unit_number: int | None = None,
+        indoor_unit: IndoorUnitView | None = None,
     ) -> None:
         """Place the entity on the gateway, or on one of its indoor units."""
         super().__init__(coordinator)
         self.entity_description = description
+        self._indoor_unit = indoor_unit
         entry_id = coordinator.config_entry.entry_id
-        if unit_number is None:
+        if indoor_unit is None:
             self._attr_unique_id = f"{entry_id}_{description.key}"
             self._attr_device_info = coordinator.gateway_device_info
         else:
-            self._attr_unique_id = f"{entry_id}_unit_{unit_number}_{description.key}"
-            self._attr_device_info = coordinator.indoor_unit_device_info(unit_number)
+            number = indoor_unit.number
+            self._attr_unique_id = f"{entry_id}_unit_{number}_{description.key}"
+            self._attr_device_info = coordinator.indoor_unit_device_info(number)
 
     @property
     @override
     def available(self) -> bool:
-        """Whether this entity's sub-system answered the most recent poll."""
-        return (
-            super().available
-            and self.entity_description.report_name in self.coordinator.data.updated
-        )
+        """Whether this entity's value was read in the most recent poll."""
+        if (
+            not super().available
+            or self.entity_description.report_name not in self.coordinator.data.updated
+        ):
+            return False
+        return self._indoor_unit is None or self._indoor_unit.present
 
     async def _async_write(self, write: Callable[[], Awaitable[None]]) -> None:
         """Run one write against the gateway, then ask for a refresh."""
         try:
             await write()
-        except Exception as err:  # noqa: BLE001
-            self._raise_for_write(err)
-        await self.coordinator.async_request_refresh()
-
-    def _raise_for_write(self, err: Exception) -> NoReturn:
-        """Turn a library error from a write into the right HA exception."""
-        if isinstance(err, UnsupportedValueError):
+        except UnsupportedValueError as err:
             raise ServiceValidationError(
                 translation_domain=DOMAIN,
                 translation_key="unsupported_value",
                 translation_placeholders={"error": str(err)},
             ) from err
-        if isinstance(err, ModbusError):
+        except ModbusError as err:
             raise HomeAssistantError(
                 translation_domain=DOMAIN,
                 translation_key="write_failed",
                 translation_placeholders={"error": str(err)},
             ) from err
-        raise err
+        await self.coordinator.async_request_refresh()

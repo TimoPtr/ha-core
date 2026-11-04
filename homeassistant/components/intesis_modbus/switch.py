@@ -101,7 +101,7 @@ async def async_setup_entry(
         )
         return
     async_add_entities(
-        IntesisSwitch(coordinator, unit, description, unit_number=number)
+        IntesisSwitch(coordinator, unit, description, indoor_unit=unit)
         for number, unit in sorted(device.indoor_units.items())
         for description in INDOOR_UNIT_SWITCHES
     )
@@ -118,10 +118,10 @@ class IntesisSwitch[TargetT](IntesisEntity, SwitchEntity):
         target: TargetT,
         description: IntesisSwitchDescription[TargetT],
         *,
-        unit_number: int | None = None,
+        indoor_unit: IndoorUnitView | None = None,
     ) -> None:
         """Bind to the object the description reads and writes."""
-        super().__init__(coordinator, description, unit_number=unit_number)
+        super().__init__(coordinator, description, indoor_unit=indoor_unit)
         self._target: TargetT = target
 
     @property

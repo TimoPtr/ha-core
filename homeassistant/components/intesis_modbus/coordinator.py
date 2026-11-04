@@ -5,7 +5,12 @@ from datetime import timedelta
 import logging
 from typing import override
 
-from intesis_gw_modbus import GatewayFamily, IntesisSingleUnitGateway, WrongGatewayError
+from intesis_gw_modbus import (
+    GatewayFamily,
+    IntesisSingleUnitGateway,
+    NoIndoorUnitsError,
+    WrongGatewayError,
+)
 from modbus_connection import ModbusError
 from modbus_connection.model import UpdateReport
 from propcache.api import cached_property
@@ -50,6 +55,10 @@ class IntesisCoordinator(DataUpdateCoordinator[UpdateReport]):
             raise ConfigEntryError(
                 translation_domain=DOMAIN, translation_key="wrong_model"
             ) from err
+        except NoIndoorUnitsError as err:
+            raise UpdateFailed(
+                translation_domain=DOMAIN, translation_key="no_indoor_units"
+            ) from err
         except ModbusError as err:
             raise UpdateFailed(
                 translation_domain=DOMAIN, translation_key="modbus_error"
@@ -79,13 +88,10 @@ class IntesisCoordinator(DataUpdateCoordinator[UpdateReport]):
             self.hass,
             DOMAIN,
             issue_id,
+            config_entry_id=self.config_entry.entry_id,
             is_fixable=False,
             severity=ir.IssueSeverity.WARNING,
             translation_key="temperature_format_changed",
-            translation_placeholders={
-                "configured": configured.value,
-                "detected": detected.value,
-            },
         )
 
     def _log_component_changes(self, report: UpdateReport) -> None:

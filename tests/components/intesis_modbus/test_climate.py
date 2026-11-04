@@ -4,7 +4,6 @@ from datetime import timedelta
 from unittest.mock import MagicMock, patch
 
 from freezegun.api import FrozenDateTimeFactory
-from intesis_gw_modbus import UnsupportedValueError
 from modbus_connection import IllegalDataAddressError, ModbusTimeoutError
 from modbus_connection.mock import MockModbusConnection, WriteEvent
 import pytest
@@ -351,14 +350,3 @@ async def test_turn_on_and_off(
         CLIMATE_DOMAIN, SERVICE_TURN_ON, {ATTR_ENTITY_ID: ENTITY_ID}, blocking=True
     )
     assert [(w.address, w.values[0]) for w in writes] == [(0, 0), (0, 1)]
-
-
-async def test_unexpected_write_error_propagates(
-    hass: HomeAssistant, init_integration: MockConfigEntry
-) -> None:
-    """An error that is neither a library nor a Modbus error is not masked."""
-    entity = hass.data["entity_components"][CLIMATE_DOMAIN].get_entity(ENTITY_ID)
-    with pytest.raises(RuntimeError):
-        entity._raise_for_write(RuntimeError("boom"))
-    with pytest.raises(ServiceValidationError):
-        entity._raise_for_write(UnsupportedValueError("not on this unit"))

@@ -1,10 +1,16 @@
 """Tests for a multi-unit gateway end to end."""
 
+from datetime import timedelta
 from unittest.mock import patch
 
+from freezegun.api import FrozenDateTimeFactory
 from modbus_connection.mock import MockModbusConnection, WriteEvent
 import pytest
-from pytest_homeassistant.common import MockConfigEntry, snapshot_platform
+from pytest_homeassistant.common import (
+    MockConfigEntry,
+    async_fire_time_changed,
+    snapshot_platform,
+)
 from pytest_homeassistant.typing import WebSocketGenerator
 from syrupy.assertion import SnapshotAssertion
 
@@ -18,17 +24,20 @@ from homeassistant.components.climate import (
     HVACAction,
     HVACMode,
 )
-from homeassistant.components.intesis_modbus.const import DOMAIN
+from homeassistant.components.intesis_modbus.const import DOMAIN, SCAN_INTERVAL
 from homeassistant.components.switch import DOMAIN as SWITCH_DOMAIN
+from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import (
     ATTR_ENTITY_ID,
     ATTR_TEMPERATURE,
     SERVICE_TURN_ON,
     STATE_OFF,
     STATE_ON,
+    STATE_UNAVAILABLE,
     Platform,
 )
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import device_registry as dr, entity_registry as er
 from homeassistant.setup import async_setup_component
 
@@ -265,3 +274,55 @@ async def test_remove_stale_unit_device(
     assert device_registry.async_get(stale.id) is None
     assert not (await client.remove_device(present.id))["success"]
     assert not (await client.remove_device(gateway.id))["success"]
+
+
+async def test_booting_gateway_is_setup_retry(
+    hass: HomeAssistant,
+    mock_multi_entry: MockConfigEntry,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """A gateway that lists no indoor unit yet retries setup without a traceback."""
+    connection = MockModbusConnection()
+    seed_multi_unit(connection.for_unit(1), present=())
+    with patch(
+        "homeassistant.components.intesis_modbus.async_get_unit",
+        side_effect=lambda hass, entry, params, unit_id: connection.for_unit(unit_id),
+    ):
+        mock_multi_entry.add_to_hass(hass)
+        await hass.config_entries.async_setup(mock_multi_entry.entry_id)
+    assert mock_multi_entry.state is ConfigEntryState.SETUP_RETRY
+    assert "Unexpected error" not in caplog.text
+
+
+async def test_unit_losing_communication_goes_unavailable(
+    hass: HomeAssistant,
+    freezer: FrozenDateTimeFactory,
+    init_multi_integration: MockConfigEntry,
+    mock_multi_connection: MockModbusConnection,
+) -> None:
+    """A unit the gateway stops talking to is unavailable, the others are not."""
+    mock_multi_connection.for_unit(1).holding[140] = 1  # unit 7 comm error
+    freezer.tick(timedelta(seconds=SCAN_INTERVAL + 1))
+    async_fire_time_changed(hass)
+    await hass.async_block_till_done(wait_background_tasks=True)
+    assert hass.states.get("climate.indoor_unit_7").state == STATE_UNAVAILABLE
+    assert hass.states.get("sensor.indoor_unit_7_error").state == STATE_UNAVAILABLE
+    assert hass.states.get("climate.indoor_unit_0").state == HVACMode.HEAT
+
+
+async def test_half_degree_setpoint_is_refused_before_any_write(
+    hass: HomeAssistant,
+    init_multi_integration: MockConfigEntry,
+    mock_multi_connection: MockModbusConnection,
+) -> None:
+    """Indoor units take whole degrees only; the library refuses 24.5 locally."""
+    writes: list[WriteEvent] = []
+    mock_multi_connection.for_unit(1).on_write(writes.append)
+    with pytest.raises(ServiceValidationError):
+        await hass.services.async_call(
+            CLIMATE_DOMAIN,
+            SERVICE_SET_TEMPERATURE,
+            {ATTR_ENTITY_ID: "climate.indoor_unit_7", ATTR_TEMPERATURE: 24.5},
+            blocking=True,
+        )
+    assert writes == []
