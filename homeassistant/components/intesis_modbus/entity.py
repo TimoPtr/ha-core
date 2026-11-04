@@ -1,5 +1,6 @@
 """Base entity for Intesis Modbus gateways."""
 
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from typing import NoReturn, override
 
@@ -58,6 +59,14 @@ class IntesisEntity(CoordinatorEntity[IntesisCoordinator]):
             super().available
             and self.entity_description.report_name in self.coordinator.data.updated
         )
+
+    async def _async_write(self, write: Callable[[], Awaitable[None]]) -> None:
+        """Run one write against the gateway, then ask for a refresh."""
+        try:
+            await write()
+        except Exception as err:  # noqa: BLE001
+            self._raise_for_write(err)
+        await self.coordinator.async_request_refresh()
 
     def _raise_for_write(self, err: Exception) -> NoReturn:
         """Turn a library error from a write into the right HA exception."""

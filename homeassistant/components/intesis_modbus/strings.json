@@ -122,6 +122,17 @@
         "name": "Hardware communication"
       }
     },
+    "button": {
+      "reset_error": {
+        "name": "Reset error"
+      },
+      "reset_filter": {
+        "name": "Reset filter sign"
+      },
+      "reset_gateway": {
+        "name": "Reset gateway"
+      }
+    },
     "climate": {
       "air_conditioner": {
         "state_attributes": {
@@ -140,6 +151,14 @@
             }
           }
         }
+      }
+    },
+    "number": {
+      "external_temperature": {
+        "name": "External temperature reference"
+      },
+      "window_timeout": {
+        "name": "Open window timeout"
       }
     },
     "sensor": {
@@ -204,6 +223,23 @@
       },
       "undervoltage_hours": {
         "name": "Undervoltage time"
+      }
+    },
+    "switch": {
+      "block_periodic_sendings": {
+        "name": "Block repeated commands"
+      },
+      "gateway_disabled": {
+        "name": "Gateway disabled"
+      },
+      "master": {
+        "name": "XY bus master"
+      },
+      "remote_controller_lock": {
+        "name": "Remote controller lock"
+      },
+      "window_contact": {
+        "name": "Window contact"
       }
     }
   },

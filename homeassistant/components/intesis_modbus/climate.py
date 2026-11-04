@@ -1,6 +1,5 @@
 """Climate entity for the air conditioner(s) behind an Intesis gateway."""
 
-from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from typing import Any, Final, override
 
@@ -206,14 +205,6 @@ class IntesisClimate(IntesisEntity, ClimateEntity):
     @override
     def target_temperature_step(self) -> float:
         return self._ac.setpoint_step
-
-    async def _async_write(self, write: Callable[[], Awaitable[None]]) -> None:
-        """Run one write against the gateway, then refresh."""
-        try:
-            await write()
-        except Exception as err:  # noqa: BLE001
-            self._raise_for_write(err)
-        await self.coordinator.async_request_refresh()
 
     @override
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:

@@ -8,9 +8,25 @@
         "default": "mdi:air-filter"
       }
     },
+    "button": {
+      "reset_error": {
+        "default": "mdi:restart-alert"
+      },
+      "reset_filter": {
+        "default": "mdi:air-filter"
+      }
+    },
     "climate": {
       "air_conditioner": {
         "default": "mdi:air-conditioner"
+      }
+    },
+    "number": {
+      "external_temperature": {
+        "default": "mdi:home-thermometer"
+      },
+      "window_timeout": {
+        "default": "mdi:timer-sand"
       }
     },
     "sensor": {
@@ -34,6 +50,23 @@
       },
       "setpoint_min": {
         "default": "mdi:thermometer-chevron-down"
+      }
+    },
+    "switch": {
+      "block_periodic_sendings": {
+        "default": "mdi:repeat-off"
+      },
+      "gateway_disabled": {
+        "default": "mdi:power-plug-off"
+      },
+      "master": {
+        "default": "mdi:crown"
+      },
+      "remote_controller_lock": {
+        "default": "mdi:remote-off"
+      },
+      "window_contact": {
+        "default": "mdi:window-open-variant"
       }
     }
   }

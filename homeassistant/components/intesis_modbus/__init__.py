@@ -13,8 +13,11 @@ from .helpers import create_device, create_modbus_params
 
 PLATFORMS: list[Platform] = [
     Platform.BINARY_SENSOR,
+    Platform.BUTTON,
     Platform.CLIMATE,
+    Platform.NUMBER,
     Platform.SENSOR,
+    Platform.SWITCH,
 ]
 
 
