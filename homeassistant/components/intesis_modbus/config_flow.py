@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 import logging
-from typing import Any, override
+from typing import TYPE_CHECKING, Any, override
 
 from intesis_gw_modbus import (
     KNOWN_DEVICE_IDS,
@@ -318,7 +318,8 @@ class IntesisModbusConfigFlow(ConfigFlow, domain=DOMAIN):
         if self.source == SOURCE_RECONFIGURE:
             has_vane = self._get_reconfigure_entry().data.get(CONF_HAS_VANE, True)
         else:
-            assert self._model is not None
+            if TYPE_CHECKING:
+                assert self._model is not None
             has_vane = self._probe.raw_vane in self._model.brand.vane_positions
         return self.async_show_form(
             step_id=STEP_FEATURES,
