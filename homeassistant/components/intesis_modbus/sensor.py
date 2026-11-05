@@ -147,7 +147,7 @@ SENSORS: Final[tuple[IntesisSensorDescription[IntesisSingleUnitGateway], ...]] =
     IntesisSensorDescription(
         key="undervoltage_hours",
         translation_key="undervoltage_hours",
-        report_name="diagnostics",
+        report_name="status",
         device_class=SensorDeviceClass.DURATION,
         native_unit_of_measurement=UnitOfTime.HOURS,
         entity_category=EntityCategory.DIAGNOSTIC,

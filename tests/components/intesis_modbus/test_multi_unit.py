@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from freezegun.api import FrozenDateTimeFactory
 from intesis_gw_modbus.multi_unit.device import REDISCOVERY_BATCH
+from modbus_connection import ServerDeviceFailureError
 from modbus_connection.mock import MockModbusConnection, WriteEvent
 import pytest
 from pytest_homeassistant.common import (
@@ -309,6 +310,22 @@ async def test_unit_losing_communication_goes_unavailable(
     assert hass.states.get("climate.indoor_unit_7").state == STATE_UNAVAILABLE
     assert hass.states.get("sensor.indoor_unit_7_error").state == STATE_UNAVAILABLE
     assert hass.states.get("climate.indoor_unit_0").state == HVACMode.HEAT
+
+
+async def test_unit_block_refused_goes_unavailable_alone(
+    hass: HomeAssistant,
+    freezer: FrozenDateTimeFactory,
+    init_multi_integration: MockConfigEntry,
+    mock_multi_connection: MockModbusConnection,
+) -> None:
+    """A block the gateway stops serving takes only its own unit down."""
+    mock_multi_connection.for_unit(1).fail_read(140, ServerDeviceFailureError())
+    freezer.tick(timedelta(seconds=SCAN_INTERVAL + 1))
+    async_fire_time_changed(hass)
+    await hass.async_block_till_done(wait_background_tasks=True)
+    assert hass.states.get("climate.indoor_unit_7").state == STATE_UNAVAILABLE
+    assert hass.states.get("climate.indoor_unit_0").state == HVACMode.HEAT
+    assert hass.states.get("climate.indoor_unit_1").state == HVACMode.HEAT
 
 
 async def test_unit_coming_online_later_gets_entities(
