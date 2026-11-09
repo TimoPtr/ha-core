@@ -12,7 +12,7 @@
     'device_id': <DeviceEntry identifiers=[('intesis_modbus', '01JTESTINTESISSINGLE000000')]>,
     'disabled_by': None,
     'domain': 'binary_sensor',
-    'entity_category': None,
+    'entity_category': <EntityCategory.DIAGNOSTIC: 'diagnostic'>,
     'entity_id': 'binary_sensor.inmbsmhi001r000_alarm',
     'has_entity_name': True,
     'hidden_by': None,

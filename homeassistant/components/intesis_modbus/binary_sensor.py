@@ -15,6 +15,7 @@ from homeassistant.components.binary_sensor import (
     BinarySensorEntity,
     BinarySensorEntityDescription,
 )
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
@@ -46,6 +47,7 @@ BINARY_SENSORS: Final[
         translation_key="alarm",
         report_name="control",
         device_class=BinarySensorDeviceClass.PROBLEM,
+        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda d: d.alarm,
     ),
     IntesisBinarySensorDescription(
@@ -65,6 +67,7 @@ INDOOR_UNIT_BINARY_SENSORS: Final[
         report_name="units",
         families=MULTI_UNIT_ONLY,
         device_class=BinarySensorDeviceClass.PROBLEM,
+        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda u: u.filter_sign,
     ),
     IntesisBinarySensorDescription(
@@ -73,6 +76,7 @@ INDOOR_UNIT_BINARY_SENSORS: Final[
         report_name="units",
         families=MULTI_UNIT_ONLY,
         device_class=BinarySensorDeviceClass.RUNNING,
+        entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
         value_fn=lambda u: u.compressor_on,
     ),
@@ -87,6 +91,7 @@ GATEWAY_BINARY_SENSORS: Final[
         report_name="status",
         families=MULTI_UNIT_ONLY,
         device_class=BinarySensorDeviceClass.CONNECTIVITY,
+        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda d: d.hw_comm_ok,
     ),
 )
