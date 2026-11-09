@@ -16,11 +16,6 @@
         "default": "mdi:air-filter"
       }
     },
-    "climate": {
-      "air_conditioner": {
-        "default": "mdi:air-conditioner"
-      }
-    },
     "number": {
       "external_temperature": {
         "default": "mdi:home-thermometer"
